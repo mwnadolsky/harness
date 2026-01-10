@@ -1,4 +1,4 @@
 # harness
-basic selenium automation harness
+basic selenium / pytest automation harness
 
 test commit
