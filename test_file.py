@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
 import pytest
-
+import time
 
 
 
@@ -25,9 +25,27 @@ def test_ab_testing():
 
     # get the first line of text on the page
     page_text = driver.find_element(by.TAG_NAME, 'body').text
+    #print(page_text)
     first_line = next(line for line in page_text.splitlines() if line.strip())
-
+    
     assert first_line == 'A/B Test Variation 1' or first_line == 'A/B Test Control'
+
+    driver.quit()
+
+def test_ab_testing_Elemental_Selenium_link():
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    link = driver.find_element('xpath', '//a[text()="A/B Testing"]')
+    link.click()
+
+    link = driver.find_element('xpath','//a[text()="Elemental Selenium"]')
+    link.click()
+    
+    time.wait
+
+    print(driver.title)
 
     driver.quit()
 
@@ -108,5 +126,6 @@ def test_checkboxes():
 
     assert box_1.is_selected()
     assert not box_2.is_selected()
+    print("does this work")
 
     driver.quit()
