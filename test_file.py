@@ -14,6 +14,27 @@ def test_title():
 
     driver.quit()
 
+def test_search_home_page():
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    list_container = driver.find_element(by.ID, "content")
+
+    # Extract all text from that container as a single string
+    full_list_text = list_container.text
+
+    # Example 1: Count the number of example entries (lines)
+    lines = [line.strip() for line in full_list_text.split('\n') if line.strip()]
+    # Filter out header lines like "Welcome..." and "Available Examples"
+    example_lines = [line for line in lines if line not in ["Welcome to the-internet", "Available Examples", "Powered by", "Elemental Selenium"]]
+    print(f"\nNumber of example links found: {len(example_lines)}")
+
+    # Print or manipulate the string
+    print("=== FULL LIST AS STRING ===")
+    print(example_lines)
+    print("\nString length:", len(example_lines))
+
+    driver.quit()
 
 def test_ab_testing():
 
