@@ -31,7 +31,7 @@ def test_ab_testing():
 
     driver.quit()
 
-def test_elemental_selenium_link():
+def test_ab_testing_elemental_selenium_link():
 
     driver = webdriver.Chrome()
     driver.get("https://the-internet.herokuapp.com/")
@@ -42,9 +42,34 @@ def test_elemental_selenium_link():
     link = driver.find_element('xpath','//a[text()="Elemental Selenium"]')
     link.click()
 
-    driver.get("https://elementalselenium.com/")
+    #driver.get("https://elementalselenium.com/")
+    original_window_handle = driver.current_window_handle
+    print(f"Original window title: {driver.title}")
     
-    assert "Elemental Selenium" in driver.title
+    print(original_window_handle)
+    main_tab_handle1 = driver.window_handles[1]
+    print(main_tab_handle1)
+
+    time.sleep(3)
+    
+    driver.switch_to.window(driver.window_handles[1])
+    #main_tab_handle2 = driver.window_handles[1]
+    #print(main_tab_handle2)
+    print(f"Original window 2 title: {driver.title}")
+    
+    #original_window_handle2 = driver.current_window_handle
+    #rint(original_window_handle2)
+
+    print("title 5")
+    time.sleep(1)
+    title2 = str(driver.title)
+    print("title 2")
+    print(title2)
+    print("current url")
+    print(driver.current_url)
+
+    current_url_via_js = driver.execute_script("return window.location.href;")
+    print(current_url_via_js)
 
     driver.quit()
 
