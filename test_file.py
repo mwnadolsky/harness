@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
+import random
 import pytest
 import time
 
@@ -30,9 +31,32 @@ def test_search_home_page():
     print(f"\nNumber of example links found: {len(example_lines)}")
 
     # Print or manipulate the string
-    print("=== FULL LIST AS STRING ===")
+    print("=== Choose one from this list ===")
     print(example_lines)
-    print("\nString length:", len(example_lines))
+    print("\n ")
+
+    search_term1 ="Drag and Drop" 
+    search_term = random.choice(example_lines)
+    if search_term in example_lines:
+        print(f"\nFound '{search_term}' in the list.")
+
+    link = driver.find_element('xpath', f'*//a[text()= "{search_term}"]')
+    link.click()
+    time.sleep(2)
+
+    #driver.switch_to.window(driver.window_handles[-1])
+    time.sleep(2)
+    print(driver.title+" driver Title ")
+    print()
+    print(search_term1)
+    print(search_term)
+    print(driver.current_url)
+    url_parts = driver.current_url.split('/')
+    print(url_parts)
+    print(url_parts[-1])
+    #print(str(driver.current_url.lower))
+
+    assert True if set(search_term) & set(url_parts[-1]) else False
 
     driver.quit()
 
