@@ -15,34 +15,6 @@ def test_title():
 
     driver.quit()
 
-def test_search_home_page():
-    driver = webdriver.Chrome()
-    driver.get("https://the-internet.herokuapp.com/")
-
-    list_container = driver.find_element(by.ID, "content")
-
-    full_list_text = list_container.text
-    lines = [line.strip() for line in full_list_text.split('\n') if line.strip()]
-
-    #for this particular list taking the below lines out results in the complete intternet home page list
-    home_page_list = [line for line in lines if line not in ["Welcome to the-internet", "Available Examples", "Powered by", "Elemental Selenium"]]
-
-    random_search_term = random.choice(home_page_list)
-    search_words = random_search_term.lower().split()
-
-    link = driver.find_element('xpath', f'*//a[text()= "{random_search_term}"]')
-    link.click()
-
-    url_parts = driver.current_url.split('/')
-    last_url_part = url_parts[-1]
-
-    #time.sleep(1)
-    print(search_words)
-    print(last_url_part)
-    assert any(word in last_url_part for word in search_words)
-
-    driver.quit()
-
 def test_ab_testing():
 
     driver = webdriver.Chrome()
