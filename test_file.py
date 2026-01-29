@@ -1,7 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
-import pytest
-import time
 
 
 
@@ -42,13 +40,9 @@ def test_ab_testing_elemental_selenium_link():
     link = driver.find_element('xpath','//a[text()="Elemental Selenium"]')
     link.click()
 
-    main_tab_handle1 = driver.window_handles[1]
-    time.sleep(3)
-    main_tab_handle1 = driver.window_handles[1]
-    print(main_tab_handle1)
-    
-    print("current url")
-    print(driver.current_url)
+    driver.switch_to.window(driver.window_handles[1])
+
+    assert "Elemental Selenium" in driver.title 
 
     driver.quit()
 
@@ -129,6 +123,5 @@ def test_checkboxes():
 
     assert box_1.is_selected()
     assert not box_2.is_selected()
-    print("does this work")
 
     driver.quit()
