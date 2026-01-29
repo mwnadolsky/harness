@@ -36,9 +36,6 @@ def test_search_home_page():
     url_parts = driver.current_url.split('/')
     last_url_part = url_parts[-1]
 
-    #time.sleep(1)
-    print(search_words)
-    print(last_url_part)
     assert any(word in last_url_part for word in search_words)
 
     driver.quit()
