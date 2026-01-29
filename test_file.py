@@ -1,5 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
+import random
+import pytest
+import time
 
 
 
@@ -12,6 +15,50 @@ def test_title():
 
     driver.quit()
 
+def test_search_home_page():
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    list_container = driver.find_element(by.ID, "content")
+
+    # Extract all text from that container as a single string
+    full_list_text = list_container.text
+
+    # Example 1: Count the number of example entries (lines)
+    lines = [line.strip() for line in full_list_text.split('\n') if line.strip()]
+    # Filter out header lines like "Welcome..." and "Available Examples"
+    example_lines = [line for line in lines if line not in ["Welcome to the-internet", "Available Examples", "Powered by", "Elemental Selenium"]]
+    print(f"\nNumber of example links found: {len(example_lines)}")
+
+    # Print or manipulate the string
+    print("=== Choose one from this list ===")
+    print(example_lines)
+    print("\n ")
+
+    search_term1 ="Drag and Drop" 
+    search_term = random.choice(example_lines)
+    if search_term in example_lines:
+        print(f"\nFound '{search_term}' in the list.")
+
+    link = driver.find_element('xpath', f'*//a[text()= "{search_term}"]')
+    link.click()
+    time.sleep(2)
+
+    #driver.switch_to.window(driver.window_handles[-1])
+    time.sleep(2)
+    print(driver.title+" driver Title ")
+    print()
+    print(search_term1)
+    print(search_term)
+    print(driver.current_url)
+    url_parts = driver.current_url.split('/')
+    print(url_parts)
+    print(url_parts[-1])
+    #print(str(driver.current_url.lower))
+
+    assert True if set(search_term) & set(url_parts[-1]) else False
+
+    driver.quit()
 
 def test_ab_testing():
 
