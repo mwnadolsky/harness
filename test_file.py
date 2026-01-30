@@ -1,7 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
+import random
 import pytest
-
+import time
 
 
 
@@ -14,7 +15,6 @@ def test_title():
 
     driver.quit()
 
-
 def test_ab_testing():
 
     driver = webdriver.Chrome()
@@ -26,8 +26,25 @@ def test_ab_testing():
     # get the first line of text on the page
     page_text = driver.find_element(by.TAG_NAME, 'body').text
     first_line = next(line for line in page_text.splitlines() if line.strip())
-
+    
     assert first_line == 'A/B Test Variation 1' or first_line == 'A/B Test Control'
+
+    driver.quit()
+
+def test_ab_testing_elemental_selenium_link():
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    link = driver.find_element('xpath', '//a[text()="A/B Testing"]')
+    link.click()
+
+    link = driver.find_element('xpath','//a[text()="Elemental Selenium"]')
+    link.click()
+
+    driver.switch_to.window(driver.window_handles[1])
+
+    assert "Elemental Selenium" in driver.title 
 
     driver.quit()
 
