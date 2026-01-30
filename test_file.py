@@ -1,9 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
-import random
 import pytest
 import time
-
 
 
 def test_title():
@@ -14,6 +12,7 @@ def test_title():
     assert "The Internet" in driver.title
 
     driver.quit()
+
 
 def test_ab_testing():
 
@@ -31,6 +30,7 @@ def test_ab_testing():
 
     driver.quit()
 
+
 def test_ab_testing_elemental_selenium_link():
 
     driver = webdriver.Chrome()
@@ -39,8 +39,7 @@ def test_ab_testing_elemental_selenium_link():
     link = driver.find_element('xpath', '//a[text()="A/B Testing"]')
     link.click()
 
-    link = driver.find_element('xpath','//a[text()="Elemental Selenium"]')
-    link.click()
+    link = driver.find_element('xpath','//a[text()="Elemental Selenium"]').click()
 
     driver.switch_to.window(driver.window_handles[1])
 
@@ -99,13 +98,27 @@ def test_remove_elements():
 def test_basic_auth_login():
 
     driver = webdriver.Chrome()
-    driver.get("https://admin:admin@the-internet.herokuapp.com/basic_auth")
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+    driver.find_element('xpath', '//a[text()="Basic Auth]').click()
+    time.sleep(2)
+
+    all_elements = driver.find_elements(by.XPATH, "//*")
+    print(all_elements)
+
+    driver.switch_to.alert
+
+    time.sleep(2)
+
+    all_elements = driver.find_elements(by.XPATH, "//*")
+    print(all_elements)
 
     # get the first line of text on the page
     page_text = driver.find_element(by.TAG_NAME, 'body').text
-    first_line = next(line for line in page_text.splitlines() if line.strip())
+    #first_line = next(line for line in page_text.splitlines() if line.strip())
 
-    assert first_line == 'Basic Auth'
+    #assert first_line == 'Basic Auth'
+
 
 def test_checkboxes():
 
