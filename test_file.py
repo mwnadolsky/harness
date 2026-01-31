@@ -108,6 +108,9 @@ def test_basic_auth_login():
     time.sleep(1)
     link.click()
     time.sleep(5)
+    #NOTES: I tried multiple times to see if an alert is present when the pop up is present.
+    #       I kept getting the time out error for these alerts so the pop up is assumed to not
+    #       be an alert.
     """try:
         WebDriverWait(driver, 20).until(EC.alert_is_present())
 
@@ -128,9 +131,7 @@ def test_basic_auth_login():
     """popup2 = driver.find_element(by.CSS_SELECTOR, ".modal, .popup, [role='dialog']")
     print(popup2)"""
 
-    current_handle = driver.current_window_handle
-    print("handles")
-    print(str(current_handle))
+    #NOTES:  The same handles kept popping up on my output, there are not two handles only one, so this pop up isn't a handle 
     time.sleep(2)
 
     all_elements = driver.find_elements(by.XPATH, "//*")
@@ -154,7 +155,16 @@ def test_basic_auth_login():
 
     time.sleep(2)
 
-    shadow_host = driver.find_element(by.CSS_SELECTOR, "css-selector-of-shadow-host")
+    #NOTES:  So here is where I ended my search. I am assuming this is a "Shadow DOM". You can search that.
+    # With my DevTools I'm trying to record the DOM tree while I'm interacting with this pop-up to see if I can 
+    # view any of it's html code, but I can't. 
+    # I can't find a way to interact with this pop-up's elements.
+    # The developer of pop-ups especially sign in pop ups would like to make the html difficult to see for automators
+    # If this is a shadow host type of a pop up then maybe this will find it. But I don't know if I'm using the right shadow host 
+    # I guessed at the-internet.herokuapp.com and the-internet.herokuapp.com/basic_auth for the shadow host names. I don't know how to find the shadow host name
+
+    #shadow_host = driver.find_element(By.CSS_SELECTOR, "css-selector-of-shadow-host")              #I got this from Generic Google search
+    shadow_host = driver.find_element(by.CSS_SELECTOR, "the-internet.herokuapp.com/basic_auth")     # I replaced it with this, I was just guessing here. I didn't look into how to find the above selector.
 
 # 2. Get the shadow root
     shadow_root = shadow_host.get_shadow_root()
@@ -179,6 +189,7 @@ def test_basic_auth_login():
 
 def test_checkboxes():
 
+
     driver = webdriver.Chrome()
     driver.get("https://admin:admin@the-internet.herokuapp.com")
 
@@ -198,3 +209,13 @@ def test_checkboxes():
     print("does this work")
 
     driver.quit()
+
+
+
+#NOTES:  To see shadow hosts (specifically the hidden user-agent shadow DOM) in Chrome DevTools, you need to enable a specific setting within the DevTools preferences. 
+# Steps to enable "Show user agent shadow DOM"
+# Open Chrome DevTools. You can do this by right-clicking on any element on the web page and selecting Inspect, or by pressing F12, or Ctrl+Shift+I (Windows/Linux) / Command+Option+I (Mac).
+# Open the DevTools Settings. Click the Settings cog icon (⚙️) in the top-right corner of the DevTools panel, or press F1.
+# Navigate to the "Preferences" tab (which is the default view).
+# Find the "Elements" section and check the box for "Show user agent shadow DOM".
+# Close the Settings panel. 
