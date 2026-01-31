@@ -234,3 +234,15 @@ def test_checkboxes():
 #Here are some additional notes for where I left off.
 #Google search this: "shadow dom elements in selenium", "in chrome devtools record DOM tree", "Tell me about shadow hosts for pop ups", "DevTools can't interact with DOM while popup is open".  
 #The above is where I left off. I have been staring at this issue for too long and I have to take a break.
+
+#The below code didn't get anything useful
+    # Find all elements with shadow roots
+    shadow_hosts = driver.execute_script("""
+    return Array.from(document.querySelectorAll('*'))
+        .filter(el => el.shadowRoot)
+        .map(el => el);
+    """)
+    #Above output is nothing
+
+    shadow_hosts1 = driver.execute_script("""
+    return Array.from(document.querySelectorAll('*'))""")
