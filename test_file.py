@@ -164,6 +164,17 @@ def test_basic_auth_login():
     # I guessed at the-internet.herokuapp.com and the-internet.herokuapp.com/basic_auth for the shadow host names. I don't know how to find the shadow host name
 
     #shadow_host = driver.find_element(By.CSS_SELECTOR, "css-selector-of-shadow-host")              #I got this from Generic Google search
+
+
+    # Find all elements with shadow roots
+    shadow_hosts = driver.execute_script("""
+    return Array.from(document.querySelectorAll('*'))
+        """)
+
+    print('All shadow hosts:', shadow_hosts)
+    print('Number of shadow hosts found:', len(shadow_hosts))
+
+
     shadow_host = driver.find_element(by.CSS_SELECTOR, "the-internet.herokuapp.com/basic_auth")     # I replaced it with this, I was just guessing here. I didn't look into how to find the above selector.
 
 # 2. Get the shadow root
