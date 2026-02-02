@@ -127,3 +127,32 @@ def test_checkboxes():
     assert not box_2.is_selected()
 
     driver.quit()
+
+def test_dropdown():
+
+    driver = webdriver.Chrome()
+    driver.get("https://admin:admin@the-internet.herokuapp.com")
+
+    driver.find_element('xpath', '//a[text()="Dropdown"]').click()
+
+    #find the dropdown
+    dropdown = driver.find_element('xpath', '//select[@id="dropdown"]')
+    dropdown.click()
+
+    #pick option 1
+    option_1 = driver.find_element('xpath', '//option[text()="Option 1"]')
+    option_2 = driver.find_element('xpath', '//option[text()="Option 2"]')
+
+    option_1.click()
+
+    value = dropdown.get_attribute("value")
+
+    assert value == "1"
+
+    dropdown.click()
+
+    option_2.click()
+
+    assert value == "2"
+
+    driver.quit()
