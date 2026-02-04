@@ -107,6 +107,15 @@ def test_basic_auth_login():
 
     assert first_line == 'Basic Auth'
 
+def test_broken_images():
+
+    driver = webdriver.Chrome()
+    driver.get("https://admin:admin@the-internet.herokuapp.com/basic_auth")
+    driver.find_element('xpath', '//a[text()="Broken Images"]').click()
+
+    
+
+
 def test_checkboxes():
 
     driver = webdriver.Chrome()
