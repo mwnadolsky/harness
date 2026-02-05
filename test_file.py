@@ -1,8 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
-import random
-import pytest
-import time
 
 
 
@@ -14,6 +11,7 @@ def test_title():
     assert "The Internet" in driver.title
 
     driver.quit()
+
 
 def test_ab_testing():
 
@@ -30,6 +28,7 @@ def test_ab_testing():
     assert first_line == 'A/B Test Variation 1' or first_line == 'A/B Test Control'
 
     driver.quit()
+
 
 def test_ab_testing_elemental_selenium_link():
 
@@ -109,6 +108,7 @@ def test_basic_auth_login():
 
     driver.quit()
 
+
 def test_broken_images():
 
     driver = webdriver.Chrome()
@@ -130,9 +130,10 @@ def test_broken_images():
         else:
             question_list.append(image_src)
     
-    assert 2 == broken_count, f"broken images was two out of 4, which of these are broken? {question_list}"
+    assert 2 == broken_count, f"broken images was two out of four, which of these are broken? {question_list}"
 
     driver.quit()
+
 
 def test_checkboxes():
 
