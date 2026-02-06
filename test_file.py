@@ -42,7 +42,7 @@ def test_ab_testing_elemental_selenium_link():
     link.click()
 
     driver.switch_to.window(driver.window_handles[1])
-    
+
     assert "Elemental Selenium" in driver.title
 
     driver.quit()
