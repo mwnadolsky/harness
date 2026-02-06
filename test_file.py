@@ -154,6 +154,5 @@ def test_checkboxes():
 
     assert box_1.is_selected()
     assert not box_2.is_selected()
-    print("does this work")
 
     driver.quit()
