@@ -1,8 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
-import random
-import pytest
-import time
 
 
 
@@ -14,6 +11,7 @@ def test_title():
     assert "The Internet" in driver.title
 
     driver.quit()
+
 
 def test_ab_testing():
 
@@ -31,6 +29,7 @@ def test_ab_testing():
 
     driver.quit()
 
+
 def test_ab_testing_elemental_selenium_link():
 
     driver = webdriver.Chrome()
@@ -44,7 +43,7 @@ def test_ab_testing_elemental_selenium_link():
 
     driver.switch_to.window(driver.window_handles[1])
 
-    assert "Elemental Selenium" in driver.title 
+    assert "Elemental Selenium" in driver.title
 
     driver.quit()
 
@@ -99,15 +98,45 @@ def test_remove_elements():
 def test_basic_auth_login():
 
     driver = webdriver.Chrome()
-    driver.get("https://admin:admin@the-internet.herokuapp.com/basic_auth")
-
-    # get the first line of text on the page
-    page_text = driver.find_element(by.TAG_NAME, 'body').text
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+    link = driver.find_element('xpath', '//a[text()="Basic Auth"]')
+    link.click()
     first_line = next(line for line in page_text.splitlines() if line.strip())
 
     assert first_line == 'Basic Auth'
 
+    driver.quit()
+
+
+def test_broken_images():
+
+    driver = webdriver.Chrome()
+    driver.get("https://admin:admin@the-internet.herokuapp.com")
+    driver.find_element('xpath', '//a[text()="Broken Images"]').click()
+
+    images = driver.find_elements(by.TAG_NAME, 'img')
+
+    broken_count = 0
+    question_list = []
+    for img in images:
+        # With Javascript I can see if the natural width is 0 and is therefore broken
+        natural_width = driver.execute_script("return arguments[0].naturalWidth", img)
+        image_src = img.get_attribute('src') or img.get_attribute('data-src') or 'No source'
+
+        if natural_width == 0:
+            broken_count += 1
+            question_list.append(image_src)
+        else:
+            question_list.append(image_src)
+    
+    assert 2 == broken_count, f"broken images was two out of four, which of these are broken? {question_list}"
+
+    driver.quit()
+
+
 def test_checkboxes():
+
 
     driver = webdriver.Chrome()
     driver.get("https://admin:admin@the-internet.herokuapp.com")
