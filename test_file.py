@@ -156,13 +156,13 @@ def test_basic_auth_login():
 
     time.sleep(2)
 
-    shadow_host = driver.find_element(By.CSS_SELECTOR, "css-selector-of-shadow-host")
+    shadow_host = driver.find_element(by.CSS_SELECTOR, "css-selector-of-shadow-host")
 
 # 2. Get the shadow root
     shadow_root = shadow_host.get_shadow_root()
 
 # 3. Locate the element inside the shadow DOM
-    inner_element = shadow_root.find_element(By.CSS_SELECTOR, "css-selector-inside-shadow-root")
+    inner_element = shadow_root.find_element(by.CSS_SELECTOR, "css-selector-inside-shadow-root")
 
     inner_element.click()
 
