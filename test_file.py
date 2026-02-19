@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
+from selenium.webdriver.common.action_chains import ActionChains
 import random
 import pytest
 import time
@@ -127,3 +128,24 @@ def test_checkboxes():
     assert not box_2.is_selected()
 
     driver.quit()
+
+def test_context_menu():
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    driver.find_element('xpath', '//a[text()="Context Menu"]').click()
+
+    hot_spot = driver.find_element("xpath", '//div[@id="hot-spot"]')
+    ActionChains(driver).context_click(hot_spot).perform()
+
+    alert = driver.switch_to.alert
+    alert_text = alert.text
+
+    assert alert_text == 'You selected a context menu'
+
+    alert.accept()
+    
+    driver.quit()
+
+    
