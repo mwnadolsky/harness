@@ -131,7 +131,7 @@ def test_checkboxes():
 def test_dropdown():
 
     driver = webdriver.Chrome()
-    driver.get("https://admin:admin@the-internet.herokuapp.com")
+    driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Dropdown"]').click()
 
