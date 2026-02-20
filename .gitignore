@@ -211,3 +211,9 @@ __marimo__/
 
 # personal
 dev.py
+
+
+#macOS
+.DS_Store
+**/.DS_Store
+

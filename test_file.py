@@ -129,11 +129,36 @@ def test_checkboxes():
 
     driver.quit()
 
-def test_context_menu():
+def test_dropdown():
 
     driver = webdriver.Chrome()
     driver.get("https://the-internet.herokuapp.com/")
 
+    driver.find_element('xpath', '//a[text()="Dropdown"]').click()
+
+    #find the dropdown
+    dropdown = driver.find_element('xpath', '//select[@id="dropdown"]')
+    dropdown.click()
+
+    #pick option 1
+    option_1 = driver.find_element('xpath', '//option[text()="Option 1"]')
+    option_2 = driver.find_element('xpath', '//option[text()="Option 2"]')
+
+    option_1.click()
+
+    assert option_1.is_selected()
+
+    #pick option 2
+    dropdown.click()
+
+    option_2.click()
+
+    assert option_2.is_selected()
+
+    driver.quit()
+    
+def test_context_menu():
+  
     driver.find_element('xpath', '//a[text()="Context Menu"]').click()
 
     hot_spot = driver.find_element("xpath", '//div[@id="hot-spot"]')
