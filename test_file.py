@@ -129,36 +129,30 @@ def test_checkboxes():
 
     driver.quit()
 
-def test_dropdown():
+def test_context_menu():
 
     driver = webdriver.Chrome()
     driver.get("https://the-internet.herokuapp.com/")
 
-    driver.find_element('xpath', '//a[text()="Dropdown"]').click()
+    driver.find_element('xpath', '//a[text()="Context Menu"]').click()
 
-    #find the dropdown
-    dropdown = driver.find_element('xpath', '//select[@id="dropdown"]')
-    dropdown.click()
+    hot_spot = driver.find_element("xpath", '//div[@id="hot-spot"]')
+    ActionChains(driver).context_click(hot_spot).perform()
 
-    #pick option 1
-    option_1 = driver.find_element('xpath', '//option[text()="Option 1"]')
-    option_2 = driver.find_element('xpath', '//option[text()="Option 2"]')
+    alert = driver.switch_to.alert
+    alert_text = alert.text
 
-    option_1.click()
+    assert alert_text == 'You selected a context menu'
 
-    assert option_1.is_selected()
-
-    #pick option 2
-    dropdown.click()
-
-    option_2.click()
-
-    assert option_2.is_selected()
+    alert.accept()
 
     driver.quit()
-    
+
 def test_context_menu():
-  
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+
     driver.find_element('xpath', '//a[text()="Context Menu"]').click()
 
     hot_spot = driver.find_element("xpath", '//div[@id="hot-spot"]')
@@ -173,4 +167,22 @@ def test_context_menu():
     
     driver.quit()
 
+def test_entry_ad():
+
+    driver = webdriver.Chrome()
+    driver.get("https://admin:admin@the-internet.herokuapp.com")
+
+    driver.find_element('xpath', '//a[text()="Entry Ad"]').click()
+
+    #Wait for ad to appear
+    time.sleep(2)
     
+    #Exit entry ad
+    driver.find_element('xpath', '//p[text()="Close"]').click()
+
+    #Check that ad is gone by looking for modal visibility
+    modal = driver.find_element('xpath', '//div[contains(@class,"modal")]')
+
+    assert not modal.is_displayed()
+    
+    driver.quit()
