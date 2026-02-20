@@ -148,6 +148,25 @@ def test_context_menu():
 
     driver.quit()
 
+def test_context_menu():
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    driver.find_element('xpath', '//a[text()="Context Menu"]').click()
+
+    hot_spot = driver.find_element("xpath", '//div[@id="hot-spot"]')
+    ActionChains(driver).context_click(hot_spot).perform()
+
+    alert = driver.switch_to.alert
+    alert_text = alert.text
+
+    assert alert_text == 'You selected a context menu'
+
+    alert.accept()
+    
+    driver.quit()
+
 def test_entry_ad():
 
     driver = webdriver.Chrome()
