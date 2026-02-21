@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
 import random
 import pytest
 import time
@@ -176,19 +177,25 @@ def test_context_menu():
 def test_entry_ad():
 
     driver = webdriver.Chrome()
-    driver.get("https://admin:admin@the-internet.herokuapp.com")
+    driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Entry Ad"]').click()
 
-    #Wait for ad to appear
-    time.sleep(2)
-    
-    #Exit entry ad
+    modal = driver.find_element('xpath', '//div[contains(@class,"modal")]')
+
+    #Wait for ad to appear and exit
+    wait = WebDriverWait(driver, timeout=5)
+    wait.until(lambda _ : modal.is_displayed())
     driver.find_element('xpath', '//p[text()="Close"]').click()
 
     #Check that ad is gone by looking for modal visibility
-    modal = driver.find_element('xpath', '//div[contains(@class,"modal")]')
-
     assert not modal.is_displayed()
-    
+
+    #Reactivate ad and check it will open in new session
+    driver.find_element('xpath', '//a[text()="click here"]').click()
+    modal = driver.find_element('xpath', '//div[contains(@class,"modal")]')
+    wait.until(lambda _ : modal.is_displayed())
+
+    assert modal.is_displayed()
+      
     driver.quit()
