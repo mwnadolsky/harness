@@ -101,7 +101,6 @@ def test_remove_elements():
 def test_basic_auth_login():
 
     driver = webdriver.Chrome()
-    driver = webdriver.Chrome()
     driver.get("https://the-internet.herokuapp.com/")
     time.sleep(1)
     link = driver.find_element('xpath', '//a[text()="Basic Auth"]')
