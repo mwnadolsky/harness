@@ -107,6 +107,18 @@ def test_basic_auth_login():
 
     assert first_line == 'Basic Auth'
 
+def test_challenging_dom():
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/challenging_dom")
+
+    time.sleep(5)
+
+    button_text = driver.find_element('xpath', '//div/a[@id="81021ac0-ee85-013e-6bb6-66f10444b9eb"]')
+    print(button_text)
+
+    driver.quit()
+
 def test_checkboxes():
 
     driver = webdriver.Chrome()
