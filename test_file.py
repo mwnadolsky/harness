@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By as by
 
 
-
 def test_title():
 
     driver = webdriver.Chrome()
@@ -98,10 +97,10 @@ def test_remove_elements():
 def test_basic_auth_login():
 
     driver = webdriver.Chrome()
-    driver = webdriver.Chrome()
-    driver.get("https://the-internet.herokuapp.com/")
-    link = driver.find_element('xpath', '//a[text()="Basic Auth"]')
-    link.click()
+    driver.get("https://admin:admin@the-internet.herokuapp.com/basic_auth")
+
+    # get the first line of text on the page
+    page_text = driver.find_element(by.TAG_NAME, 'body').text
     first_line = next(line for line in page_text.splitlines() if line.strip())
 
     assert first_line == 'Basic Auth'
