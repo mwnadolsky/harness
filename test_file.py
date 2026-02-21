@@ -101,80 +101,23 @@ def test_remove_elements():
 def test_basic_auth_login():
 
     driver = webdriver.Chrome()
+
+    #When navigating directly into the basic authentication site (using the line below) the login pop up does not appear and this test passes 
+    #driver.get("https://admin:admin@the-internet.herokuapp.com/basic_auth")
+    
+    #Instead if I click into the basic authentication site from the home page, the login pop up does appear and this test fials
+    #I can explore finding a way to fill in the fields for the login pop up or we can leave this test as is.
     driver.get("https://the-internet.herokuapp.com/")
-    time.sleep(1)
-    link = driver.find_element('xpath', '//a[text()="Basic Auth"]')
-    print("handle 0")
-    print(driver.window_handles)
-    time.sleep(1)
-    link.click()
-    time.sleep(5)
-    """try:
-        WebDriverWait(driver, 20).until(EC.alert_is_present())
-
-        alert = driver.switch_to.alert
-        alert.accept() # Or dismiss() or send_keys()
-    except TimeoutException:
-        print("No alert present within the given time.")
-    except NoAlertPresentException:
-        print("No alert present at this moment.")
-    driver.switch_to.alert """
-
-    #popup = WebDriverWait(driver, 10).until(
-    #EC.presence_of_element_located((by.XPATH, "//div[@class='modal' or contains(@class,'popup')]")))
-    #print(popup)
-
-    print("popups")
-    # Or find by CSS selecto
-    """popup2 = driver.find_element(by.CSS_SELECTOR, ".modal, .popup, [role='dialog']")
-    print(popup2)"""
-
-    current_handle = driver.current_window_handle
-    print("handles")
-    print(str(current_handle))
-    time.sleep(2)
-
-    all_elements = driver.find_elements(by.XPATH, "//*")
-    print(all_elements)
-
-    print("handle 1")
-    current_handle = driver.current_window_handle
-    print(str(current_handle))
-    print(driver.__getattribute__)
-    print(driver.window_handles)
-    print("handle 2")
-
-    #WebDriverWait(driver, 10).until(EC.alert_is_present())
-    #alert = driver.switch_to.alert
-    #text = alert.text
-    #print(text)
-
-    #print(driver.switch_to.alert.text)
-    print("handle 3")
-    print(driver.window_handles)
-
-    time.sleep(2)
-
-    shadow_host = driver.find_element(by.CSS_SELECTOR, "css-selector-of-shadow-host")
-
-# 2. Get the shadow root
-    shadow_root = shadow_host.get_shadow_root()
-
-# 3. Locate the element inside the shadow DOM
-    inner_element = shadow_root.find_element(by.CSS_SELECTOR, "css-selector-inside-shadow-root")
-
-    inner_element.click()
-
-    all_elements = driver.find_elements(by.XPATH, "//*")
-    print(all_elements)
+    basic_auth_link = driver.find_element('xpath', '//a[text()="Basic Auth"]')
+    basic_auth_link.click()
 
     # get the first line of text on the page
     page_text = driver.find_element(by.TAG_NAME, 'body').text
-    #first_line = next(line for line in page_text.splitlines() if line.strip())
-    print("handle 4")
-    print(page_text)
+    first_line = next(line for line in page_text.splitlines() if line.strip())
 
-    #assert first_line == 'Basic Auth'
+    assert first_line == 'Basic Auth'
+    # I don't know why the line below is not included in the remote master branch
+    driver.quit()
 
 
 def test_checkboxes():
