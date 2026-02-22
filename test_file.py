@@ -110,14 +110,29 @@ def test_basic_auth_login():
 def test_challenging_dom():
 
     driver = webdriver.Chrome()
-    driver.get("https://the-internet.herokuapp.com/challenging_dom")
+    driver.get("https://the-internet.herokuapp.com/")
+    driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
 
-    time.sleep(5)
+    #The first test for this page is to see if the three buttons text are different after clicking the top button
+    #A thorough test would be repeated for the remaining two buttons.    
+    
+    button_text1_b = driver.find_element('xpath', '//a[contains(@class, "button")]').text
+    button_text2_b = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
+    button_text3_b = driver.find_element('xpath', '//a[contains(@class, "button success")]').text
 
-    button_text = driver.find_element('xpath', '//div/a[@id="81021ac0-ee85-013e-6bb6-66f10444b9eb"]')
-    print(button_text)
+    driver.find_element('xpath', '//a[contains(@class, "button")]').click()
+
+    button_text1_a = driver.find_element('xpath', '//a[contains(@class, "button")]').text
+    button_text2_a = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
+    button_text3_a = driver.find_element('xpath', '//a[contains(@class, "button success")]').text
+
+    def are_button_texts_different(string1, string2, string3):
+        return string1 != string2 or string1 != string3 or string2 != string3
+
+    assert are_button_texts_different(button_text1_a, button_text2_a, button_text3_a), "all of the button texts are the same after clicking the first button"
 
     driver.quit()
+
 
 def test_checkboxes():
 
