@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
+from selenium import EC
 import random
 import pytest
 import time
@@ -107,13 +108,13 @@ def test_basic_auth_login():
 
     assert first_line == 'Basic Auth'
 
-def test_challenging_dom():
+def test_challenging_dom_three_buttons():
 
     driver = webdriver.Chrome()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
 
-    #The first test for this page is to see if the three buttons text are different after clicking the top button
+    #This test is to verify that the text on the three buttons are different after clicking the top button
     #A thorough test would be repeated for the remaining two buttons.    
     
     button_text1_b = driver.find_element('xpath', '//a[contains(@class, "button")]').text
@@ -129,10 +130,28 @@ def test_challenging_dom():
     def are_button_texts_different(string1, string2, string3):
         return string1 != string2 or string1 != string3 or string2 != string3
 
-    assert are_button_texts_different(button_text1_a, button_text2_a, button_text3_a), "all of the button texts are the same after clicking the first button"
+    assert are_button_texts_different(button_text1_a, button_text2_a, button_text3_a), "after clicking the top button all of the buttons texts are the same"
+
+    #This test is to verify that the text on the three buttons before the button is clicked changes after the button is clicked
+
+    text_before_click = [button_text1_b, button_text2_b, button_text3_b]
+    text_after_click = [button_text1_a, button_text2_a, button_text3_a]
+
+    assert text_before_click != text_after_click, "the buttons texts before clicking the top button matches the text after clicking it"
 
     driver.quit()
 
+
+def test_challenging_dom_edit_delete_links():
+
+    driver = webdriver.Chrome()
+
+    edit_link_loc_1 = (by.XPATH, "(//a[text()='edit'])[1]")
+
+    element = EC.presence_of_element_located((edit_link_loc_1))(driver)
+    print(element)
+
+    driver.quit()
 
 def test_checkboxes():
 
