@@ -187,6 +187,7 @@ def test_dynamic_content():
     for t in driver.find_elements('xpath','//div[@class="large-10 columns"]'):
         new_texts.append(t.text)
 
+    # New lists are not the same as the previous lists, implying change
     assert new_images != images
     assert new_texts != texts
     #print("Change Happened")
