@@ -218,15 +218,6 @@ def test_challenging_dom_edit_delete_links():
     driver.quit()
 
 
-def test_challenging_dom_table_data():
-    driver = webdriver.Chrome()
-    driver.get("https://the-internet.herokuapp.com/")
-    driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
-
-
-
-    driver.quit()
-
 def test_checkboxes():
 
     driver = webdriver.Chrome()
