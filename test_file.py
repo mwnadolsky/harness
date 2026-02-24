@@ -156,6 +156,9 @@ def test_dropdown():
     
 def test_context_menu():
   
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+
     driver.find_element('xpath', '//a[text()="Context Menu"]').click()
 
     hot_spot = driver.find_element("xpath", '//div[@id="hot-spot"]')
