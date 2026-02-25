@@ -118,19 +118,14 @@ def test_broken_images():
     images = driver.find_elements(by.TAG_NAME, 'img')
 
     broken_count = 0
-    question_list = []
     for img in images:
         # With Javascript I can see if the natural width is 0 and is therefore broken
         natural_width = driver.execute_script("return arguments[0].naturalWidth", img)
-        image_src = img.get_attribute('src') or img.get_attribute('data-src') or 'No source'
 
         if natural_width == 0:
             broken_count += 1
-            question_list.append(image_src)
-        else:
-            question_list.append(image_src)
     
-    assert 2 == broken_count, f"broken images was two out of four, which of these are broken? {question_list}"
+    assert 2 == broken_count
 
     driver.quit()
 
