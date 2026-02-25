@@ -150,3 +150,75 @@ def test_checkboxes():
     assert not box_2.is_selected()
 
     driver.quit()
+
+def test_dynamic_content():
+
+    driver=webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+    driver.find_element('xpath','//a[text()="Dynamic Content"]').click()
+
+    # Keeping lists of srcs of images and text properties of elements for readable comparison
+    images = []
+    texts = []
+    
+    # Example images and texts have separate classes on this page, find each and add to appropriate list
+    for i in driver.find_elements('xpath','//div[@class="large-2 columns"]//img'):
+        images.append(i.get_attribute('src'))
+
+    for t in driver.find_elements('xpath','//div[@class="large-10 columns"]'):
+        texts.append(t.text)
+
+    driver.refresh()
+
+    # Separate list for new elements, to compare with original
+    new_images= []
+    new_texts = []
+
+    for i in driver.find_elements('xpath','//div[@class="large-2 columns"]//img'):
+        new_images.append(i.get_attribute('src'))
+
+    for t in driver.find_elements('xpath','//div[@class="large-10 columns"]'):
+        new_texts.append(t.text)
+
+    # New lists are not the same as the previous lists, implying change
+    assert new_images != images
+    assert new_texts != texts
+
+    driver.quit()
+
+
+def test_dynamic_content_with_static():
+
+    driver=webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+    driver.find_element('xpath','//a[text()="Dynamic Content"]').click()
+    driver.find_element('xpath','//a[text()="click here"]').click()
+
+    images = []
+    texts = []
+    
+    for i in driver.find_elements('xpath','//div[@class="large-2 columns"]//img'):
+        images.append(i.get_attribute('src'))
+
+    for t in driver.find_elements('xpath','//div[@class="large-10 columns"]'):
+        texts.append(t.text)
+
+    # Clicking here to keep some content static
+    driver.find_element('xpath','//a[text()="click here"]').click()
+
+    new_images= []
+    new_texts = []
+
+    for i in driver.find_elements('xpath','//div[@class="large-2 columns"]//img'):
+        new_images.append(i.get_attribute('src'))
+
+    for t in driver.find_elements('xpath','//div[@class="large-10 columns"]'):
+        new_texts.append(t.text)
+
+    assert new_images[0:2] == images[0:2] and new_texts[0:2] == texts[0:2]
+    # 3rd image may not change, but 3rd text always does. Passing 2nd assert means 3rd element changed in some way
+    assert new_images[2] not in images or new_texts[2] not in texts
+
+    driver.quit()
+
+

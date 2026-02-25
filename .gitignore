@@ -211,3 +211,4 @@ __marimo__/
 
 # personal
 dev.py
+.vscode/settings.json
