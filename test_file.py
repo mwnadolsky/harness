@@ -124,7 +124,7 @@ def test_broken_images():
 
         if natural_width == 0:
             broken_count += 1
-    
+
     assert 2 == broken_count
 
     driver.quit()
