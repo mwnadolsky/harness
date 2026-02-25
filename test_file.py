@@ -132,7 +132,6 @@ def test_broken_images():
 
 def test_checkboxes():
 
-
     driver = webdriver.Chrome()
     driver.get("https://admin:admin@the-internet.herokuapp.com")
 
