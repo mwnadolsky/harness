@@ -111,10 +111,9 @@ def test_basic_auth_login():
 def test_broken_images():
 
     driver = webdriver.Chrome()
-    driver.get("https://admin:admin@the-internet.herokuapp.com")
+    driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Broken Images"]').click()
 
-    #this finds all images on this page and creates the list called images
     images = driver.find_elements(by.TAG_NAME, 'img')
 
     broken_count = 0
