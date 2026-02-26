@@ -42,7 +42,7 @@ def test_ab_testing_elemental_selenium_link():
 
     driver.switch_to.window(driver.window_handles[1])
 
-    assert "Elemental Selenium" in driver.title 
+    assert "Elemental Selenium" in driver.title
 
     driver.quit()
 
@@ -104,6 +104,30 @@ def test_basic_auth_login():
     first_line = next(line for line in page_text.splitlines() if line.strip())
 
     assert first_line == 'Basic Auth'
+
+    driver.quit()
+
+
+def test_broken_images():
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+    driver.find_element('xpath', '//a[text()="Broken Images"]').click()
+
+    images = driver.find_elements(by.TAG_NAME, 'img')
+
+    broken_count = 0
+    for img in images:
+        # With Javascript I can see if the natural width is 0 and is therefore broken
+        natural_width = driver.execute_script("return arguments[0].naturalWidth", img)
+
+        if natural_width == 0:
+            broken_count += 1
+
+    assert 2 == broken_count
+
+    driver.quit()
+
 
 def test_checkboxes():
 
