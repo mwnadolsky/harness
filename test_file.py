@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
+import time
 
 
 def test_title():
@@ -123,7 +124,7 @@ def test_broken_images():
 
         if natural_width == 0:
             broken_count += 1
-
+    time.sleep(5)
     assert 2 == broken_count
 
     driver.quit()
