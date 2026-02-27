@@ -197,4 +197,30 @@ def test_context_menu():
     
     driver.quit()
 
+
+def test_drag_and_drop():
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+    driver.find_element('xpath', '//a[text()="Drag and Drop"]').click()
+    actions = ActionChains(driver)
+
+    # Identify boxes, confirm correct starting order
+    left_box = driver.find_element('xpath', '//div[@id="column-a"]')
+    right_box = driver.find_element('xpath', '//div[@id="column-b"]')
+    assert left_box.text == "A" and right_box.text == "B"
     
+    # Drag left box to right box, verify
+    actions.drag_and_drop(left_box, right_box).perform()
+    assert left_box.text == "B" and right_box.text == "A"
+
+    # Drag right box to left box, verify
+    actions.drag_and_drop(right_box, left_box).perform()
+    assert left_box.text == "A" and right_box.text == "B"
+
+    # Drag left box elsewhere, verify no change
+    selenium_link = driver.find_element('xpath','//a[text()="Elemental Selenium"]')
+    actions.drag_and_drop(left_box, selenium_link).perform()
+    assert left_box.text == "A" and right_box.text == "B"
+
+    driver.quit()
