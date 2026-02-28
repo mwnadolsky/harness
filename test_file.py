@@ -197,14 +197,14 @@ def test_context_menu():
     
     driver.quit()
 
+
 def test_slider():
 
     driver = webdriver.Chrome()
     driver.get("https://the-internet.herokuapp.com/")
-    actions = ActionChains(driver)
-
     driver.find_element('xpath', '//a[text()="Horizontal Slider"]').click()
-
+    actions = ActionChains(driver)
+    
     # Slider starts at 0
     display_value = driver.find_element('xpath', '//span[@id="range"]')
     assert display_value.text == "0"
