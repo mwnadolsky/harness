@@ -184,12 +184,37 @@ def test_entry_ad():
 
     modal = driver.find_element('xpath', '//div[contains(@class,"modal")]')
 
-    #Wait for ad to appear and exit
+    #Wait for ad to appear and check it is present
     wait = WebDriverWait(driver, timeout=5)
     wait.until(lambda _ : modal.is_displayed())
+
+    assert modal.is_displayed
+
+    #Exit the ad
     driver.find_element('xpath', '//p[text()="Close"]').click()
 
-    #Check that ad is gone by looking for modal visibility
+    assert not modal.is_displayed()
+
+    driver.quit()
+
+
+def test_entry_ad_refresh():
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    driver.find_element('xpath', '//a[text()="Entry Ad"]').click()
+
+    modal = driver.find_element('xpath', '//div[contains(@class,"modal")]')
+
+    #Wait for ad and exit the ad
+    wait = WebDriverWait(driver, timeout=5)
+    wait.until(lambda _ : modal.is_displayed())
+
+    assert modal.is_displayed()
+    
+    driver.find_element('xpath', '//p[text()="Close"]').click()
+
     assert not modal.is_displayed()
 
     #Reactivate ad and check it will open in new session
