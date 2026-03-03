@@ -200,10 +200,12 @@ def test_context_menu():
 
 def test_slider():
 
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome()    
     driver.get("https://the-internet.herokuapp.com/")
-    driver.find_element('xpath', '//a[text()="Horizontal Slider"]').click()
+    
     actions = ActionChains(driver)
+        
+    driver.find_element('xpath', '//a[text()="Horizontal Slider"]').click()
     
     # Slider starts at 0
     display_value = driver.find_element('xpath', '//span[@id="range"]')
