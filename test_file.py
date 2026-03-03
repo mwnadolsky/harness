@@ -200,10 +200,12 @@ def test_context_menu():
 
 def test_drag_and_drop():
 
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome()     
     driver.get("https://the-internet.herokuapp.com/")
-    driver.find_element('xpath', '//a[text()="Drag and Drop"]').click()
+    
     actions = ActionChains(driver)
+    
+    driver.find_element('xpath', '//a[text()="Drag and Drop"]').click()
 
     # Identify boxes, confirm correct starting order
     left_box = driver.find_element('xpath', '//div[@id="column-a"]')
