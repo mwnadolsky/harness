@@ -198,6 +198,44 @@ def test_context_menu():
     driver.quit()
 
 
+def test_slider():
+
+    driver = webdriver.Chrome()    
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    actions = ActionChains(driver)
+        
+    driver.find_element('xpath', '//a[text()="Horizontal Slider"]').click()
+    
+    # Slider starts at 0
+    display_value = driver.find_element('xpath', '//span[@id="range"]')
+    assert display_value.text == "0"
+    
+    # Click on middle
+    slider = driver.find_element('xpath', '//input[@type="range"]')
+    slider.click()
+    width = slider.size['width']
+    assert display_value.text == "2.5"
+
+    # Click on right side
+    actions.move_to_element_with_offset(slider, width/2, 0).click().perform()
+    assert display_value.text == "5"
+
+    # Click on left side
+    actions.move_by_offset(-width+1,0).click().perform()
+    assert display_value.text == "0"
+
+    # Click and drag right 80%
+    actions.click_and_hold().move_by_offset(width*.8,0).release().perform()
+    assert display_value.text == "4"
+
+    # Click and drag left 40%
+    actions.click_and_hold().move_by_offset(-width*.4,0).release().perform()
+    assert display_value.text == "2"
+
+    driver.quit()
+
+
 def test_drag_and_drop():
 
     driver = webdriver.Chrome()     
