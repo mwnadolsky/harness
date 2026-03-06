@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.alert import Alert
 
 
 
@@ -262,5 +263,41 @@ def test_drag_and_drop():
     selenium_link = driver.find_element('xpath','//a[text()="Elemental Selenium"]')
     actions.drag_and_drop(left_box, selenium_link).perform()
     assert left_box.text == "A" and right_box.text == "B"
+
+    driver.quit()
+
+
+def test_js_alerts():
+
+    driver = webdriver.Chrome()     
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    alert = Alert(driver)
+    
+    driver.find_element('xpath', '//a[text()="JavaScript Alerts"]').click()
+
+    # First Button
+    driver.find_element('xpath', '//button[text()="Click for JS Alert"]').click()
+    alert.accept()
+    result = driver.find_element('xpath', '//p[@id="result"]')
+    assert result.text == "You successfully clicked an alert"
+    
+    # Second Button
+    driver.find_element('xpath', '//button[text()="Click for JS Confirm"]').click()
+    alert.accept()
+    assert result.text == "You clicked: Ok"
+    driver.find_element('xpath', '//button[text()="Click for JS Confirm"]').click()
+    alert.dismiss()
+    assert result.text == "You clicked: Cancel"
+
+    # Third Button
+    driver.find_element('xpath', '//button[text()="Click for JS Prompt"]').click() 
+    alert.send_keys('Test')
+    alert.accept()
+    assert result.text == "You entered: Test"
+    driver.find_element('xpath', '//button[text()="Click for JS Prompt"]').click() 
+    alert.send_keys('Test')
+    alert.dismiss()
+    assert result.text == "You entered: null"
 
     driver.quit()
