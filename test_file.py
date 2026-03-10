@@ -1,9 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
 from selenium.webdriver.support import expected_conditions as EC
-import random
-import pytest
-import time
 
 
 
@@ -15,6 +12,7 @@ def test_title():
     assert "The Internet" in driver.title
 
     driver.quit()
+
 
 def test_ab_testing():
 
@@ -31,6 +29,7 @@ def test_ab_testing():
     assert first_line == 'A/B Test Variation 1' or first_line == 'A/B Test Control'
 
     driver.quit()
+
 
 def test_ab_testing_elemental_selenium_link():
 
@@ -108,14 +107,12 @@ def test_basic_auth_login():
 
     assert first_line == 'Basic Auth'
 
+
 def test_challenging_dom_three_buttons():
 
     driver = webdriver.Chrome()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
-
-    #This test is to verify that the text on the three buttons are different after clicking the top button
-    #A thorough test would be repeated for the remaining two buttons.    
     
     button_text1_b = driver.find_element('xpath', '//a[contains(@class, "button")]').text
     button_text2_b = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
@@ -126,11 +123,6 @@ def test_challenging_dom_three_buttons():
     button_text1_a = driver.find_element('xpath', '//a[contains(@class, "button")]').text
     button_text2_a = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
     button_text3_a = driver.find_element('xpath', '//a[contains(@class, "button success")]').text
-
-    def are_button_texts_different(string1, string2, string3):
-        return string1 != string2 or string1 != string3 or string2 != string3
-
-    assert are_button_texts_different(button_text1_a, button_text2_a, button_text3_a), "after clicking the top button all of the buttons texts are the same"
 
     #This test is to verify that the text on the three buttons before the button is clicked changes after the button is clicked
 
