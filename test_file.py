@@ -124,7 +124,7 @@ def test_challenging_dom_three_buttons():
     button_text2_a = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
     button_text3_a = driver.find_element('xpath', '//a[contains(@class, "button success")]').text
 
-    #This test is to verify that the text on the three buttons before the button is clicked changes after the button is clicked
+    #This test is to verify that the text on the three buttons changes after the button is clicked
 
     text_before_click = [button_text1_b, button_text2_b, button_text3_b]
     text_after_click = [button_text1_a, button_text2_a, button_text3_a]
