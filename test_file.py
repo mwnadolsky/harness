@@ -14,6 +14,7 @@ def test_title():
 
     driver.quit()
 
+
 def test_ab_testing():
 
     driver = webdriver.Chrome()
@@ -29,6 +30,7 @@ def test_ab_testing():
     assert first_line == 'A/B Test Variation 1' or first_line == 'A/B Test Control'
 
     driver.quit()
+
 
 def test_ab_testing_elemental_selenium_link():
 
@@ -151,6 +153,7 @@ def test_checkboxes():
 
     driver.quit()
 
+
 def test_dropdown():
 
     driver = webdriver.Chrome()
@@ -178,7 +181,8 @@ def test_dropdown():
     assert option_2.is_selected()
 
     driver.quit()
-    
+
+
 def test_context_menu():
   
     driver = webdriver.Chrome()
@@ -195,8 +199,6 @@ def test_context_menu():
     assert alert_text == 'You selected a context menu'
 
     alert.accept()
-    
-    driver.quit()
 
 
 def test_slider():
