@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By as by
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.alert import Alert
 
 
 
@@ -198,5 +199,107 @@ def test_context_menu():
     assert alert_text == 'You selected a context menu'
 
     alert.accept()
+
+
+def test_slider():
+
+    driver = webdriver.Chrome()    
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    actions = ActionChains(driver)
+        
+    driver.find_element('xpath', '//a[text()="Horizontal Slider"]').click()
+    
+    # Slider starts at 0
+    display_value = driver.find_element('xpath', '//span[@id="range"]')
+    assert display_value.text == "0"
+    
+    # Click on middle
+    slider = driver.find_element('xpath', '//input[@type="range"]')
+    slider.click()
+    width = slider.size['width']
+    assert display_value.text == "2.5"
+
+    # Click on right side
+    actions.move_to_element_with_offset(slider, width/2, 0).click().perform()
+    assert display_value.text == "5"
+
+    # Click on left side
+    actions.move_by_offset(-width+1,0).click().perform()
+    assert display_value.text == "0"
+
+    # Click and drag right 80%
+    actions.click_and_hold().move_by_offset(width*.8,0).release().perform()
+    assert display_value.text == "4"
+
+    # Click and drag left 40%
+    actions.click_and_hold().move_by_offset(-width*.4,0).release().perform()
+    assert display_value.text == "2"
+
+    driver.quit()
+
+
+def test_drag_and_drop():
+
+    driver = webdriver.Chrome()     
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    actions = ActionChains(driver)
+    
+    driver.find_element('xpath', '//a[text()="Drag and Drop"]').click()
+
+    # Identify boxes, confirm correct starting order
+    left_box = driver.find_element('xpath', '//div[@id="column-a"]')
+    right_box = driver.find_element('xpath', '//div[@id="column-b"]')
+    assert left_box.text == "A" and right_box.text == "B"
+    
+    # Drag left box to right box, verify
+    actions.drag_and_drop(left_box, right_box).perform()
+    assert left_box.text == "B" and right_box.text == "A"
+
+    # Drag right box to left box, verify
+    actions.drag_and_drop(right_box, left_box).perform()
+    assert left_box.text == "A" and right_box.text == "B"
+
+    # Drag left box elsewhere, verify no change
+    selenium_link = driver.find_element('xpath','//a[text()="Elemental Selenium"]')
+    actions.drag_and_drop(left_box, selenium_link).perform()
+    assert left_box.text == "A" and right_box.text == "B"
+
+    driver.quit()
+
+
+def test_js_alerts():
+
+    driver = webdriver.Chrome()     
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    alert = Alert(driver)
+    
+    driver.find_element('xpath', '//a[text()="JavaScript Alerts"]').click()
+
+    # First Button
+    driver.find_element('xpath', '//button[text()="Click for JS Alert"]').click()
+    alert.accept()
+    result = driver.find_element('xpath', '//p[@id="result"]')
+    assert result.text == "You successfully clicked an alert"
+    
+    # Second Button
+    driver.find_element('xpath', '//button[text()="Click for JS Confirm"]').click()
+    alert.accept()
+    assert result.text == "You clicked: Ok"
+    driver.find_element('xpath', '//button[text()="Click for JS Confirm"]').click()
+    alert.dismiss()
+    assert result.text == "You clicked: Cancel"
+
+    # Third Button
+    driver.find_element('xpath', '//button[text()="Click for JS Prompt"]').click() 
+    alert.send_keys('Test')
+    alert.accept()
+    assert result.text == "You entered: Test"
+    driver.find_element('xpath', '//button[text()="Click for JS Prompt"]').click() 
+    alert.send_keys('Test')
+    alert.dismiss()
+    assert result.text == "You entered: null"
 
     driver.quit()
