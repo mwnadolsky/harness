@@ -301,3 +301,43 @@ def test_js_alerts():
     assert result.text == "You entered: null"
 
     driver.quit()
+
+
+def test_form_auth():
+    driver = webdriver.Chrome()     
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
+
+    driver.execute_script('document.getElementById("username").value="tomsmith"')
+    driver.execute_script('document.getElementById("password").value="SuperSecretPassword!";')
+    driver.find_element('xpath','//button').click()
+    
+    assert driver.current_url == "https://the-internet.herokuapp.com/secure"
+    
+    driver.quit()
+
+
+def test_form_auth_errors():
+
+    driver = webdriver.Chrome()     
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
+
+    # Both Blank
+    driver.find_element('xpath','//button').click()
+    assert 'username' in driver.find_element(by.ID, "flash").text
+
+    # Correct username, Blank password
+    driver.execute_script('document.getElementById("username").value="tomsmith"')
+    driver.find_element('xpath','//button').click()
+    assert 'password' in driver.find_element(by.ID, "flash").text
+
+    # Blank username, Correct password
+    driver.execute_script('document.getElementById("password").value="SuperSecretPassword!";')
+    driver.find_element('xpath','//button').click()
+
+    assert 'username' in driver.find_element(by.ID, "flash").text
+    driver.quit()
+    
