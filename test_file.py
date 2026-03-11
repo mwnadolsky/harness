@@ -2,7 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By as by
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.alert import Alert
-
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 def test_title():
@@ -327,17 +328,20 @@ def test_form_auth_errors():
 
     # Both Blank
     driver.find_element('xpath','//button').click()
+    WebDriverWait(driver, 2).until(EC.presence_of_element_located((by.ID, 'flash')))
     assert 'username' in driver.find_element(by.ID, "flash").text
 
     # Correct username, Blank password
     driver.execute_script('document.getElementById("username").value="tomsmith"')
     driver.find_element('xpath','//button').click()
+    WebDriverWait(driver, 2).until(EC.presence_of_element_located((by.ID, 'flash')))
     assert 'password' in driver.find_element(by.ID, "flash").text
 
     # Blank username, Correct password
     driver.execute_script('document.getElementById("password").value="SuperSecretPassword!";')
     driver.find_element('xpath','//button').click()
-
+    WebDriverWait(driver, 2).until(EC.presence_of_element_located((by.ID, 'flash')))
     assert 'username' in driver.find_element(by.ID, "flash").text
+
     driver.quit()
     
