@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By as by
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.alert import Alert
 
@@ -13,6 +14,7 @@ def test_title(request):
     assert "The Internet" in driver.title
 
     driver.quit()
+
 
 def test_ab_testing():
 
@@ -29,6 +31,7 @@ def test_ab_testing():
     assert first_line == 'A/B Test Variation 1' or first_line == 'A/B Test Control'
 
     driver.quit()
+
 
 def test_ab_testing_elemental_selenium_link():
 
@@ -109,6 +112,107 @@ def test_basic_auth_login():
     driver.quit()
 
 
+def test_challenging_dom_three_buttons():
+
+    driver = webdriver.Chrome()
+    driver.get("https://the-internet.herokuapp.com/")
+    driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
+    
+    button_text1_b = driver.find_element('xpath', '//a[contains(@class, "button")]').text
+    button_text2_b = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
+    button_text3_b = driver.find_element('xpath', '//a[contains(@class, "button success")]').text
+
+    driver.find_element('xpath', '//a[contains(@class, "button")]').click()
+
+    button_text1_a = driver.find_element('xpath', '//a[contains(@class, "button")]').text
+    button_text2_a = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
+    button_text3_a = driver.find_element('xpath', '//a[contains(@class, "button success")]').text
+
+    #This test is to verify that the text on the three buttons changes after the button is clicked
+
+    text_before_click = [button_text1_b, button_text2_b, button_text3_b]
+    text_after_click = [button_text1_a, button_text2_a, button_text3_a]
+
+    assert text_before_click != text_after_click, "the buttons texts before clicking the top button matches the text after clicking it"
+
+    driver.quit()
+
+
+def test_challenging_dom_edit_delete_links():
+    driver = webdriver.Chrome()
+
+    driver.get("https://the-internet.herokuapp.com/")
+    driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
+
+    edit_link_loc_1 = (by.XPATH, "(//a[text()='edit'])[1]")
+    edit_link_loc_2 = (by.XPATH, "(//a[text()='edit'])[2]")
+    edit_link_loc_3 = (by.XPATH, "(//a[text()='edit'])[3]")
+    edit_link_loc_4 = (by.XPATH, "(//a[text()='edit'])[4]")
+    edit_link_loc_5 = (by.XPATH, "(//a[text()='edit'])[5]")
+    edit_link_loc_6 = (by.XPATH, "(//a[text()='edit'])[6]")
+    edit_link_loc_7 = (by.XPATH, "(//a[text()='edit'])[7]")
+    edit_link_loc_8 = (by.XPATH, "(//a[text()='edit'])[8]")
+    edit_link_loc_9 = (by.XPATH, "(//a[text()='edit'])[9]")
+    edit_link_loc_10 = (by.XPATH, "(//a[text()='edit'])[10]")
+
+    edit_element_1 = EC.element_to_be_clickable((edit_link_loc_1))(driver)
+    edit_element_2 = EC.element_to_be_clickable((edit_link_loc_2))(driver)
+    edit_element_3 = EC.element_to_be_clickable((edit_link_loc_3))(driver)
+    edit_element_4 = EC.element_to_be_clickable((edit_link_loc_4))(driver)
+    edit_element_5 = EC.element_to_be_clickable((edit_link_loc_5))(driver)
+    edit_element_6 = EC.element_to_be_clickable((edit_link_loc_6))(driver)
+    edit_element_7 = EC.element_to_be_clickable((edit_link_loc_7))(driver)
+    edit_element_8 = EC.element_to_be_clickable((edit_link_loc_8))(driver)
+    edit_element_9 = EC.element_to_be_clickable((edit_link_loc_9))(driver)
+    edit_element_10 = EC.element_to_be_clickable((edit_link_loc_10))(driver)
+
+    assert bool(edit_element_1)
+    assert bool(edit_element_2)
+    assert bool(edit_element_3)
+    assert bool(edit_element_4)
+    assert bool(edit_element_5)
+    assert bool(edit_element_6)
+    assert bool(edit_element_7)
+    assert bool(edit_element_8)
+    assert bool(edit_element_9)
+    assert bool(edit_element_10)
+
+    delete_link_loc_1 = (by.XPATH, "(//a[text()='delete'])[1]")
+    delete_link_loc_2 = (by.XPATH, "(//a[text()='delete'])[2]")
+    delete_link_loc_3 = (by.XPATH, "(//a[text()='delete'])[3]")
+    delete_link_loc_4 = (by.XPATH, "(//a[text()='delete'])[4]")
+    delete_link_loc_5 = (by.XPATH, "(//a[text()='delete'])[5]")
+    delete_link_loc_6 = (by.XPATH, "(//a[text()='delete'])[6]")
+    delete_link_loc_7 = (by.XPATH, "(//a[text()='delete'])[7]")
+    delete_link_loc_8 = (by.XPATH, "(//a[text()='delete'])[8]")
+    delete_link_loc_9 = (by.XPATH, "(//a[text()='delete'])[9]")
+    delete_link_loc_10 = (by.XPATH, "(//a[text()='delete'])[10]")
+
+    delete_element_1 = EC.element_to_be_clickable((delete_link_loc_1))(driver)
+    delete_element_2 = EC.element_to_be_clickable((delete_link_loc_2))(driver)
+    delete_element_3 = EC.element_to_be_clickable((delete_link_loc_3))(driver)
+    delete_element_4 = EC.element_to_be_clickable((delete_link_loc_4))(driver)
+    delete_element_5 = EC.element_to_be_clickable((delete_link_loc_5))(driver)
+    delete_element_6 = EC.element_to_be_clickable((delete_link_loc_6))(driver)
+    delete_element_7 = EC.element_to_be_clickable((delete_link_loc_7))(driver)
+    delete_element_8 = EC.element_to_be_clickable((delete_link_loc_8))(driver)
+    delete_element_9 = EC.element_to_be_clickable((delete_link_loc_9))(driver)
+    delete_element_10 = EC.element_to_be_clickable((delete_link_loc_10))(driver)
+
+    assert bool(delete_element_1)
+    assert bool(delete_element_2)
+    assert bool(delete_element_3)
+    assert bool(delete_element_4)
+    assert bool(delete_element_5)
+    assert bool(delete_element_6)
+    assert bool(delete_element_7)
+    assert bool(delete_element_8)
+    assert bool(delete_element_9)
+    assert bool(delete_element_10)
+
+    driver.quit()
+
+
 def test_broken_images():
 
     driver = driver_manager.get_driver()
@@ -151,6 +255,7 @@ def test_checkboxes():
 
     driver.quit()
 
+
 def test_dropdown():
 
     driver = driver_manager.get_driver()
@@ -178,7 +283,8 @@ def test_dropdown():
     assert option_2.is_selected()
 
     driver.quit()
-    
+
+
 def test_context_menu():
   
     driver = driver_manager.get_driver()
@@ -195,8 +301,6 @@ def test_context_menu():
     assert alert_text == 'You selected a context menu'
 
     alert.accept()
-    
-    driver.quit()
 
 
 def test_slider():
