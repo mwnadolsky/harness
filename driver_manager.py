@@ -1,18 +1,30 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+
+# Global variable for headless mode
+HEADLESS = True
 
 
-
-class Driver_Manager:
-
-    def __init__(self):
-        self.options = Options()
-
-    def start(self, headed=False):
-
-        if headed == False: self.options.add_argument("--headless")
-
-        return webdriver.Chrome(options=self.options)
+def set_headless(value: bool):
+    """Set the global headless mode."""
+    global HEADLESS
+    HEADLESS = value
 
 
-driver_manager = Driver_Manager()
+class DriverFactory:
+
+    @staticmethod
+    def get_driver(headless=None):
+        """Return a Chrome WebDriver. Uses global HEADLESS if not specified."""
+        if headless is None:
+            headless = HEADLESS
+
+        options = webdriver.ChromeOptions()
+
+        if headless:
+            options.add_argument("--headless=new")  # latest headless flag
+
+        return webdriver.Chrome(options=options)
+
+
+# Singleton instance for your test
+driver_manager = DriverFactory()
