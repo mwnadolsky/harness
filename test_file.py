@@ -114,7 +114,7 @@ def test_basic_auth_login():
 
 def test_challenging_dom_three_buttons():
 
-    driver = webdriver.Chrome()
+    driver = driver_manager.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
     
@@ -139,8 +139,8 @@ def test_challenging_dom_three_buttons():
 
 
 def test_challenging_dom_edit_delete_links():
-    driver = webdriver.Chrome()
 
+    driver = driver_manager.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
 
