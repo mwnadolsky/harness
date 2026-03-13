@@ -7,7 +7,7 @@ from driver_factory import driver_factory
 
 
 
-def test_title(request):
+def test_title():
 
     driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
