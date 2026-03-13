@@ -4,7 +4,7 @@ from driver_factory import set_headless
 
 def pytest_addoption(parser):
     parser.addoption(
-        "-H",
+        "-H", "--headed",
         action="store_true",
         default=False,
         help="Run browser in headed mode",
