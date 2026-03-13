@@ -3,12 +3,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.alert import Alert
 
-from driver_manager import driver_manager
+from driver_factory import driver_factory
+
 
 
 def test_title(request):
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     assert "The Internet" in driver.title
@@ -18,7 +19,7 @@ def test_title(request):
 
 def test_ab_testing():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     link = driver.find_element('xpath', '//a[text()="A/B Testing"]')
@@ -35,7 +36,7 @@ def test_ab_testing():
 
 def test_ab_testing_elemental_selenium_link():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     link = driver.find_element('xpath', '//a[text()="A/B Testing"]')
@@ -53,7 +54,7 @@ def test_ab_testing_elemental_selenium_link():
 
 def test_add_elements():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
@@ -78,7 +79,7 @@ def test_add_elements():
 
 def test_remove_elements():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
@@ -100,7 +101,7 @@ def test_remove_elements():
 
 def test_basic_auth_login():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://admin:admin@the-internet.herokuapp.com/basic_auth")
 
     # get the first line of text on the page
@@ -114,7 +115,7 @@ def test_basic_auth_login():
 
 def test_challenging_dom_three_buttons():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
     
@@ -140,7 +141,7 @@ def test_challenging_dom_three_buttons():
 
 def test_challenging_dom_edit_delete_links():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
 
@@ -215,7 +216,7 @@ def test_challenging_dom_edit_delete_links():
 
 def test_broken_images():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Broken Images"]').click()
 
@@ -236,7 +237,7 @@ def test_broken_images():
 
 def test_checkboxes():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://admin:admin@the-internet.herokuapp.com")
 
     driver.find_element('xpath', '//a[text()="Checkboxes"]').click()
@@ -258,7 +259,7 @@ def test_checkboxes():
 
 def test_dropdown():
 
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Dropdown"]').click()
@@ -287,7 +288,7 @@ def test_dropdown():
 
 def test_context_menu():
   
-    driver = driver_manager.get_driver()
+    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Context Menu"]').click()
@@ -305,7 +306,7 @@ def test_context_menu():
 
 def test_slider():
 
-    driver = driver_manager.get_driver()    
+    driver = driver_factory.get_driver()    
     driver.get("https://the-internet.herokuapp.com/")
     
     actions = ActionChains(driver)
@@ -343,7 +344,7 @@ def test_slider():
 
 def test_drag_and_drop():
 
-    driver = driver_manager.get_driver()     
+    driver = driver_factory.get_driver()     
     driver.get("https://the-internet.herokuapp.com/")
     
     actions = ActionChains(driver)
@@ -373,7 +374,7 @@ def test_drag_and_drop():
 
 def test_js_alerts():
 
-    driver = driver_manager.get_driver()     
+    driver = driver_factory.get_driver()     
     driver.get("https://the-internet.herokuapp.com/")
     
     alert = Alert(driver)

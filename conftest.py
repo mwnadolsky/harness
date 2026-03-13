@@ -1,5 +1,5 @@
 import pytest
-from driver_manager import set_headless
+from driver_factory import set_headless
 
 
 def pytest_addoption(parser):

@@ -27,4 +27,4 @@ class DriverFactory:
 
 
 # Singleton instance for your test
-driver_manager = DriverFactory()
+driver_factory = DriverFactory()
