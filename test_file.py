@@ -303,6 +303,8 @@ def test_context_menu():
 
     alert.accept()
 
+    driver.quit()
+
 
 def test_slider():
 
