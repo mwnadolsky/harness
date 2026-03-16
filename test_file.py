@@ -413,7 +413,7 @@ def test_js_alerts():
 
 def test_hovers():
     
-    driver = webdriver.Chrome()     
+    driver = driver_factory.get_driver()     
     driver.get("https://the-internet.herokuapp.com/")
     
     actions = ActionChains(driver)
