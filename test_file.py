@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By as by
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.alert import Alert
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from driver_factory import driver_factory
 
@@ -431,3 +431,50 @@ def test_hovers():
 
     driver.quit()
 
+    
+def test_form_auth():
+    driver = driver_factory.get_driver()  
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
+
+    driver.find_element(by.ID, 'username').send_keys('tomsmith')
+    driver.find_element(by.ID, 'password').send_keys('SuperSecretPassword!')
+
+    driver.find_element('xpath','//button[@type ="submit"]').click()
+
+    WebDriverWait(driver, 1).until(EC.url_contains('secure'))
+    assert driver.current_url == "https://the-internet.herokuapp.com/secure"
+    
+    driver.quit()
+
+
+def test_form_auth_errors():
+
+    driver = driver_factory.get_driver()     
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
+
+    # Both Blank
+    driver.find_element('xpath','//button[@type ="submit"]').click()
+    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+    assert 'username' in error_bar.text
+
+    # Correct username, Blank password
+    driver.find_element(by.ID, 'username').send_keys('tomsmith')
+    driver.find_element('xpath','//button[@type ="submit"]').click()
+    flash_contains_pass = WebDriverWait(driver, 1).until(EC.text_to_be_present_in_element((by.ID, 'flash'), 'password'))
+    assert flash_contains_pass
+
+    # Blank username, Correct password
+    driver.find_element(by.ID, 'password').send_keys('SuperSecretPassword!')
+    driver.find_element('xpath','//button[@type ="submit"]').click()
+    flash_contains_user = WebDriverWait(driver, 1).until(EC.text_to_be_present_in_element((by.ID, 'flash'), 'username'))
+    assert flash_contains_user
+    
+    driver.quit()
+    
+    
+    
+    
