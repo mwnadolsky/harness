@@ -4,7 +4,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support.wait import WebDriverWait
 
-from driver_factory import driver_factory
+from dev import driver_factory
 
 
 
@@ -437,10 +437,9 @@ def test_form_auth():
     driver.get("https://the-internet.herokuapp.com/")
     
     driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
-    actions = ActionChains(driver)
 
-    actions.send_keys_to_element(driver.find_element(by.ID, 'username'), 'tomsmith').perform()
-    actions.send_keys_to_element(driver.find_element(by.ID, 'password'), 'SuperSecretPassword!').perform()
+    driver.find_element(by.ID, 'username').send_keys('tomsmith')
+    driver.find_element(by.ID, 'password').send_keys('SuperSecretPassword!')
 
     driver.find_element('xpath','//button[@type ="submit"]').click()
 
@@ -456,23 +455,23 @@ def test_form_auth_errors():
     driver.get("https://the-internet.herokuapp.com/")
     
     driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
-    actions = ActionChains(driver)
+
     # Both Blank
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
-    assert 'username' in driver.find_element(by.ID, "flash").text
+    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+    assert 'username' in error_bar.text
 
     # Correct username, Blank password
-    actions.send_keys_to_element(driver.find_element(by.ID, 'username'), 'tomsmith').perform()
+    driver.find_element(by.ID, 'username').send_keys('tomsmith')
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
-    assert 'password' in driver.find_element(by.ID, "flash").text
-
+    flash_contains_pass = WebDriverWait(driver, 1).until(EC.text_to_be_present_in_element((by.ID, 'flash'), 'password'))
+    assert flash_contains_pass
+    
     # Blank username, Correct password
-    actions.send_keys_to_element(driver.find_element(by.ID, 'password'), 'SuperSecretPassword!').perform()
+    driver.find_element(by.ID, 'password').send_keys('SuperSecretPassword!')
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
-    assert 'username' in driver.find_element(by.ID, "flash").text
+    flash_contains_user = WebDriverWait(driver, 1).until(EC.text_to_be_present_in_element((by.ID, 'flash'), 'username'))
+    assert flash_contains_user
     
     driver.quit()
     
