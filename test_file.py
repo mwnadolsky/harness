@@ -4,7 +4,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support.wait import WebDriverWait
 
-from dev import driver_factory
+from driver_factory import driver_factory
 
 
 
@@ -466,7 +466,7 @@ def test_form_auth_errors():
     driver.find_element('xpath','//button[@type ="submit"]').click()
     flash_contains_pass = WebDriverWait(driver, 1).until(EC.text_to_be_present_in_element((by.ID, 'flash'), 'password'))
     assert flash_contains_pass
-    
+
     # Blank username, Correct password
     driver.find_element(by.ID, 'password').send_keys('SuperSecretPassword!')
     driver.find_element('xpath','//button[@type ="submit"]').click()
