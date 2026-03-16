@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By as by
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.alert import Alert
+from selenium.webdriver.support import expected_conditions as EC
 
 
 
@@ -405,3 +406,25 @@ def test_js_alerts():
     assert result.text == "You entered: null"
 
     driver.quit()
+
+
+def test_hovers():
+    
+    driver = webdriver.Chrome()     
+    driver.get("https://the-internet.herokuapp.com/")
+    
+    actions = ActionChains(driver)
+
+    driver.find_element('xpath', '//a[text()="Hovers"]').click()
+    
+    figures = driver.find_elements(by.CLASS_NAME, 'figure')
+
+    for i,fig in enumerate(figures):
+        i += 1
+        actions.move_to_element(fig).perform()
+        EC.element_to_be_clickable((by.LINK_TEXT, "View profile"))(driver).click()
+        assert EC.url_contains(f"users/{i}")(driver)
+        driver.back()
+
+    driver.quit()
+
