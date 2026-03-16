@@ -6,7 +6,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from driver_factory import driver_factory
 from pages.the_internet.checkboxes import CheckboxesPage
-from pages.the_internet.home import HomePage
 
 
 
@@ -17,7 +16,7 @@ def test_checkboxes():
 
     page = CheckboxesPage
 
-    driver.find_element('xpath', HomePage.checkboxes).click()
+    driver.find_element('xpath', '//a[text()="Checkboxes"]').click()
 
     box_1 = driver.find_element('xpath', page.checkbox1)
     box_2 = driver.find_element('xpath', page.checkbox2)
