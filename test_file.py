@@ -459,20 +459,27 @@ def test_form_auth_errors():
     # Both Blank
     driver.find_element('xpath','//button[@type ="submit"]').click()
     error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+
     assert 'username' in error_bar.text
+
+    driver.refresh()
 
     # Correct username, Blank password
     driver.find_element(by.ID, 'username').send_keys('tomsmith')
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    flash_contains_pass = WebDriverWait(driver, 1).until(EC.text_to_be_present_in_element((by.ID, 'flash'), 'password'))
-    assert flash_contains_pass
+    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+
+    assert 'password' in error_bar.text
+
+    driver.refresh()
 
     # Blank username, Correct password
     driver.find_element(by.ID, 'password').send_keys('SuperSecretPassword!')
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    flash_contains_user = WebDriverWait(driver, 1).until(EC.text_to_be_present_in_element((by.ID, 'flash'), 'username'))
-    assert flash_contains_user
+    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
     
+    assert 'username' in error_bar.text
+
     driver.quit()
     
     
