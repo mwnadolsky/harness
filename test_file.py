@@ -495,7 +495,7 @@ def test_status_codes():
 
         assert driver.current_url.endswith(f'/status_codes/{code}')
 
-        message = driver.find_element('xpath', '//div[@class="example"]/p').text
+        message = driver.find_element('xpath', '//div[@id="content"]//p').text
         assert f'This page returned a {code} status code.' in message
 
         # Link back to the status codes list
