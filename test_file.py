@@ -513,11 +513,13 @@ def test_status_codes_response():
     driver.find_element('xpath', '//a[text()="Status Codes"]').click()
 
     for code in ['200', '301', '404', '500']:
-        url = driver.find_element('xpath', f'//a[text()="{code}"]').get_attribute('href')
+        driver.find_element('xpath', f'//a[text()="{code}"]').click()
 
-        # Selenium can't read HTTP status codes, so request the page with fetch from the browser
-        status = driver.execute_script("return fetch(arguments[0]).then(r => r.status)", url)
+        # Selenium can't read HTTP status codes, so get the page load's status from the browser's navigation timing
+        status = driver.execute_script("return performance.getEntriesByType('navigation')[0].responseStatus")
 
         assert str(status) == code
+
+        driver.back()
 
     driver.quit()
