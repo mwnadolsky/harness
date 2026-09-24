@@ -481,7 +481,43 @@ def test_form_auth_errors():
     assert 'username' in error_bar.text
 
     driver.quit()
-    
-    
-    
-    
+
+
+def test_status_codes():
+
+    driver = driver_factory.get_driver()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    driver.find_element('xpath', '//a[text()="Status Codes"]').click()
+
+    for code in ['200', '301', '404', '500']:
+        driver.find_element('xpath', f'//a[text()="{code}"]').click()
+
+        assert driver.current_url.endswith(f'/status_codes/{code}')
+
+        message = driver.find_element('xpath', '//div[@class="example"]/p').text
+        assert f'This page returned a {code} status code.' in message
+
+        # Link back to the status codes list
+        driver.find_element('xpath', '//a[text()="here"]').click()
+        assert driver.current_url.endswith('/status_codes')
+
+    driver.quit()
+
+
+def test_status_codes_response():
+
+    driver = driver_factory.get_driver()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    driver.find_element('xpath', '//a[text()="Status Codes"]').click()
+
+    for code in ['200', '301', '404', '500']:
+        url = driver.find_element('xpath', f'//a[text()="{code}"]').get_attribute('href')
+
+        # Selenium can't read HTTP status codes, so request the page with fetch from the browser
+        status = driver.execute_script("return fetch(arguments[0]).then(r => r.status)", url)
+
+        assert str(status) == code
+
+    driver.quit()
