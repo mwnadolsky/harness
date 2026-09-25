@@ -19,16 +19,14 @@ class DriverFactory:
             headless = HEADLESS
 
         options = webdriver.ChromeOptions()
+        options.add_argument("--start-fullscreen")
 
         if headless:
             options.add_argument("--headless=new")  # latest headless flag
             # headless has no real screen and defaults to 800x600, so give it one to fill
             options.add_argument("--screen-info={1920x1080}")
 
-        driver = webdriver.Chrome(options=options)
-        driver.fullscreen_window()
-
-        return driver
+        return webdriver.Chrome(options=options)
 
 
 # Singleton instance for your test
