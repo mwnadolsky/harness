@@ -1,7 +1,7 @@
+from pages.the_internet.base import BasePage
 
 
-
-class HomePage:
+class HomePage(BasePage):
 
     header1 = '//h1'
     header2 = '//h2'
