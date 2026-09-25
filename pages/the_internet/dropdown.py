@@ -1,7 +1,7 @@
+from pages.the_internet.base import BasePage
 
 
-
-class DropdownPage:
+class DropdownPage(BasePage):
 
     header = '//h3'
     dropdown = '//select[@id="dropdown"]'
