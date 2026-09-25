@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from driver_factory import driver_factory
 from pages.the_internet.checkboxes import CheckboxesPage
+from pages.the_internet.dropdown import DropdownPage
 from pages.the_internet.home import HomePage
 
 
@@ -30,5 +31,36 @@ def test_checkboxes():
 
     assert box_1.is_selected()
     assert not box_2.is_selected()
+
+    driver.quit()
+
+
+def test_dropdown():
+
+    driver = driver_factory.get_driver()
+    driver.get("https://the-internet.herokuapp.com/")
+
+    page = DropdownPage
+
+    driver.find_element('xpath', HomePage.dropdown).click()
+
+    #find the dropdown
+    dropdown = driver.find_element('xpath', page.dropdown)
+    dropdown.click()
+
+    #pick option 1
+    option_1 = driver.find_element('xpath', page.option1)
+    option_2 = driver.find_element('xpath', page.option2)
+
+    option_1.click()
+
+    assert option_1.is_selected()
+
+    #pick option 2
+    dropdown.click()
+
+    option_2.click()
+
+    assert option_2.is_selected()
 
     driver.quit()
