@@ -1,9 +1,3 @@
-from selenium.webdriver.common.by import By as by
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.alert import Alert
-from selenium.webdriver.support import expected_conditions as EC
-
 from driver_factory import driver_factory
 from pages.the_internet.checkboxes import CheckboxesPage
 from pages.the_internet.dropdown import DropdownPage
