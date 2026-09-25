@@ -38,21 +38,16 @@ def test_dropdown():
 
     driver.find_element('xpath', HomePage.dropdown).click()
 
-    #find the dropdown
     dropdown = driver.find_element('xpath', page.dropdown)
-    dropdown.click()
-
-    #pick option 1
     option_1 = driver.find_element('xpath', page.option1)
     option_2 = driver.find_element('xpath', page.option2)
 
+    dropdown.click()
     option_1.click()
 
     assert option_1.is_selected()
 
-    #pick option 2
     dropdown.click()
-
     option_2.click()
 
     assert option_2.is_selected()
