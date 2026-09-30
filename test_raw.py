@@ -7,7 +7,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from driver_factory import driver_factory
 
-pytestmark = pytest.mark.raw_regression
+pytestmark = pytest.mark.regression_raw
 
 
 @pytest.mark.smoke

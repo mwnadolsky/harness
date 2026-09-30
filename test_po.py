@@ -4,7 +4,7 @@ from pages.the_internet.checkboxes import CheckboxesPage
 from pages.the_internet.dropdown import DropdownPage
 from pages.the_internet.home import HomePage
 
-pytestmark = pytest.mark.po_regression
+pytestmark = pytest.mark.regression_po
 
 
 @pytest.mark.smoke
