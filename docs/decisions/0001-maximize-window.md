@@ -57,11 +57,12 @@ A general "wait until the page has settled" check (network, DOM, and layout quie
 
 ## Decision
 
-Keep `--screen-info={1920x1080}` for headless, and call `driver.maximize_window()` right after the driver is created, inside `get_driver()` before it's returned.
-
-- It goes in `get_driver()` so every driver gets it, whether it comes from the `driver` fixture or a direct call.
-- It runs before the first navigation, so pages load at full size from the start.
-- It's the WebDriver method rather than the `--start-maximized` flag, because the method is what was tested with the `ActionChains` tests.
+- **Keep `--screen-info={1920x1080}` for headless**, because headless Chrome's default virtual screen is only 800×600, so maximizing without it gives an 800×600 window.
+- **Drop `--start-fullscreen`**, because macOS ignores Chrome's startup fullscreen request when another app, like the terminal running pytest, has focus at launch.
+- **Call `driver.maximize_window()` instead of going fullscreen**, because macOS's fullscreen animation and separate desktop space made mouse actions (right-click, click at an offset, drag, hover) miss or fail, while a maximized window passed every test with no wait.
+- **Use the `maximize_window()` method rather than the `--start-maximized` flag**, because the method is what was tested with the `ActionChains` tests.
+- **Call it inside `get_driver()`**, so every driver gets it, whether it comes from the `driver` fixture or a direct call.
+- **Call it right after the driver is created, before the first navigation**, so pages load at full size from the start.
 
 ## Consequences
 
