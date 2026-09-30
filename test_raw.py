@@ -1,3 +1,4 @@
+import pytest
 from selenium.webdriver.common.by import By as by
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -6,8 +7,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from driver_factory import driver_factory
 
+pytestmark = pytest.mark.regression_raw
 
 
+@pytest.mark.smoke
 def test_title():
 
     driver = driver_factory.get_driver()
@@ -236,6 +239,7 @@ def test_broken_images():
     driver.quit()
 
 
+@pytest.mark.smoke
 def test_checkboxes():
 
     driver = driver_factory.get_driver()
@@ -258,6 +262,7 @@ def test_checkboxes():
     driver.quit()
 
 
+@pytest.mark.smoke
 def test_dropdown():
 
     driver = driver_factory.get_driver()

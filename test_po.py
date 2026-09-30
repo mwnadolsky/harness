@@ -1,10 +1,13 @@
+import pytest
 from driver_factory import driver_factory
 from pages.the_internet.checkboxes import CheckboxesPage
 from pages.the_internet.dropdown import DropdownPage
 from pages.the_internet.home import HomePage
 
+pytestmark = pytest.mark.regression_po
 
 
+@pytest.mark.smoke
 def test_checkboxes():
 
     driver = driver_factory.get_driver()
@@ -29,6 +32,7 @@ def test_checkboxes():
     driver.quit()
 
 
+@pytest.mark.smoke
 def test_dropdown():
 
     driver = driver_factory.get_driver()
