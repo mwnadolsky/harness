@@ -15,6 +15,7 @@ class DriverFactory:
 
         driver = webdriver.Chrome(options=options)
         # not --start-fullscreen: on macOS that flag is dropped when another app has focus at launch
+        # (see docs/decisions/0001-fullscreen-window.md)
         driver.fullscreen_window()
 
         return driver
