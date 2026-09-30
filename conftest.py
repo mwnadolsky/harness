@@ -13,6 +13,6 @@ def pytest_addoption(parser):
 
 @pytest.fixture
 def driver(request):
-    driver = driver_factory.get_driver(headless=not request.config.getoption("--headed"))
+    driver = driver_factory.get_driver(headed=request.config.getoption("--headed"))
     yield driver
     driver.quit()
