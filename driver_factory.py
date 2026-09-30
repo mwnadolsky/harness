@@ -17,7 +17,3 @@ class DriverFactory:
             options.add_argument("--screen-info={1920x1080}")
 
         return webdriver.Chrome(options=options)
-
-
-# Singleton instance for your test
-driver_factory = DriverFactory()

@@ -1,5 +1,5 @@
 import pytest
-from driver_factory import driver_factory
+from driver_factory import DriverFactory
 
 
 def pytest_addoption(parser):
@@ -13,6 +13,6 @@ def pytest_addoption(parser):
 
 @pytest.fixture
 def driver(request):
-    driver = driver_factory.get_driver(headed=request.config.getoption("--headed"))
+    driver = DriverFactory.get_driver(headed=request.config.getoption("--headed"))
     yield driver
     driver.quit()
