@@ -7,7 +7,9 @@ class DriverFactory:
     def get_driver(headed=False):
         """Return a Chrome WebDriver."""
         options = webdriver.ChromeOptions()
-        options.add_argument("--start-fullscreen")
+        # maximize, not fullscreen: macOS native fullscreen breaks ActionChains in headed runs
+        # (see docs/decisions/0001-maximize-window.md)
+        options.add_argument("--start-maximized")
 
         if not headed:
             options.add_argument("--headless=new")  # latest headless flag
