@@ -1,27 +1,15 @@
 from selenium import webdriver
 
-# Global variable for headless mode
-HEADLESS = True
-
-
-def set_headless(value: bool):
-    """Set the global headless mode."""
-    global HEADLESS
-    HEADLESS = value
-
 
 class DriverFactory:
 
     @staticmethod
-    def get_driver(headless=None):
-        """Return a Chrome WebDriver. Uses global HEADLESS if not specified."""
-        if headless is None:
-            headless = HEADLESS
-
+    def get_driver(headed=False):
+        """Return a Chrome WebDriver."""
         options = webdriver.ChromeOptions()
         options.add_argument("--start-fullscreen")
 
-        if headless:
+        if not headed:
             options.add_argument("--headless=new")  # latest headless flag
             # headless has no real screen and defaults to 800x600, so give it one to fill
             options.add_argument("--screen-info={1920x1080}")

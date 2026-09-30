@@ -5,25 +5,19 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support.wait import WebDriverWait
 
-from driver_factory import driver_factory
-
 pytestmark = pytest.mark.regression_raw
 
 
 @pytest.mark.smoke
-def test_title():
+def test_title(driver):
 
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     assert "The Internet" in driver.title
 
-    driver.quit()
 
+def test_ab_testing(driver):
 
-def test_ab_testing():
-
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     link = driver.find_element('xpath', '//a[text()="A/B Testing"]')
@@ -35,12 +29,9 @@ def test_ab_testing():
     
     assert first_line == 'A/B Test Variation 1' or first_line == 'A/B Test Control'
 
-    driver.quit()
 
+def test_ab_testing_elemental_selenium_link(driver):
 
-def test_ab_testing_elemental_selenium_link():
-
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     link = driver.find_element('xpath', '//a[text()="A/B Testing"]')
@@ -53,12 +44,9 @@ def test_ab_testing_elemental_selenium_link():
 
     assert "Elemental Selenium" in driver.title
 
-    driver.quit()
 
+def test_add_elements(driver):
 
-def test_add_elements():
-
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
@@ -78,12 +66,9 @@ def test_add_elements():
 
     assert len(buttons) == 2
 
-    driver.quit()
 
+def test_remove_elements(driver):
 
-def test_remove_elements():
-
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
@@ -100,12 +85,9 @@ def test_remove_elements():
 
     assert len(buttons) == 0
 
-    driver.quit()
 
+def test_basic_auth_login(driver):
 
-def test_basic_auth_login():
-
-    driver = driver_factory.get_driver()
     driver.get("https://admin:admin@the-internet.herokuapp.com/basic_auth")
 
     # get the first line of text on the page
@@ -114,12 +96,9 @@ def test_basic_auth_login():
 
     assert first_line == 'Basic Auth'
 
-    driver.quit()
 
+def test_challenging_dom_three_buttons(driver):
 
-def test_challenging_dom_three_buttons():
-
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
     
@@ -140,12 +119,9 @@ def test_challenging_dom_three_buttons():
 
     assert text_before_click != text_after_click, "the buttons texts before clicking the top button matches the text after clicking it"
 
-    driver.quit()
 
+def test_challenging_dom_edit_delete_links(driver):
 
-def test_challenging_dom_edit_delete_links():
-
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
 
@@ -215,12 +191,9 @@ def test_challenging_dom_edit_delete_links():
     assert bool(delete_element_9)
     assert bool(delete_element_10)
 
-    driver.quit()
 
+def test_broken_images(driver):
 
-def test_broken_images():
-
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Broken Images"]').click()
 
@@ -236,13 +209,10 @@ def test_broken_images():
 
     assert 2 == broken_count
 
-    driver.quit()
-
 
 @pytest.mark.smoke
-def test_checkboxes():
+def test_checkboxes(driver):
 
-    driver = driver_factory.get_driver()
     driver.get("https://admin:admin@the-internet.herokuapp.com")
 
     driver.find_element('xpath', '//a[text()="Checkboxes"]').click()
@@ -259,13 +229,10 @@ def test_checkboxes():
     assert box_1.is_selected()
     assert not box_2.is_selected()
 
-    driver.quit()
-
 
 @pytest.mark.smoke
-def test_dropdown():
+def test_dropdown(driver):
 
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Dropdown"]').click()
@@ -284,12 +251,9 @@ def test_dropdown():
 
     assert option_2.is_selected()
 
-    driver.quit()
 
-
-def test_context_menu():
+def test_context_menu(driver):
   
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Context Menu"]').click()
@@ -304,12 +268,9 @@ def test_context_menu():
 
     alert.accept()
 
-    driver.quit()
 
+def test_slider(driver):
 
-def test_slider():
-
-    driver = driver_factory.get_driver()    
     driver.get("https://the-internet.herokuapp.com/")
     
     actions = ActionChains(driver)
@@ -342,12 +303,9 @@ def test_slider():
     actions.click_and_hold().move_by_offset(-width*.4,0).release().perform()
     assert display_value.text == "2"
 
-    driver.quit()
 
+def test_drag_and_drop(driver):
 
-def test_drag_and_drop():
-
-    driver = driver_factory.get_driver()     
     driver.get("https://the-internet.herokuapp.com/")
     
     actions = ActionChains(driver)
@@ -372,12 +330,9 @@ def test_drag_and_drop():
     actions.drag_and_drop(left_box, selenium_link).perform()
     assert left_box.text == "A" and right_box.text == "B"
 
-    driver.quit()
 
+def test_js_alerts(driver):
 
-def test_js_alerts():
-
-    driver = driver_factory.get_driver()     
     driver.get("https://the-internet.herokuapp.com/")
     
     alert = Alert(driver)
@@ -408,12 +363,9 @@ def test_js_alerts():
     alert.dismiss()
     assert result.text == "You entered: null"
 
-    driver.quit()
 
-
-def test_hovers():
+def test_hovers(driver):
     
-    driver = driver_factory.get_driver()     
     driver.get("https://the-internet.herokuapp.com/")
     
     actions = ActionChains(driver)
@@ -429,11 +381,8 @@ def test_hovers():
         assert EC.url_contains(f"users/{i}")(driver)
         driver.back()
 
-    driver.quit()
-
     
-def test_form_auth():
-    driver = driver_factory.get_driver()  
+def test_form_auth(driver):
     driver.get("https://the-internet.herokuapp.com/")
     
     driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
@@ -445,13 +394,10 @@ def test_form_auth():
 
     WebDriverWait(driver, 1).until(EC.url_contains('secure'))
     assert driver.current_url == "https://the-internet.herokuapp.com/secure"
-    
-    driver.quit()
 
 
-def test_form_auth_errors():
+def test_form_auth_errors(driver):
 
-    driver = driver_factory.get_driver()     
     driver.get("https://the-internet.herokuapp.com/")
     
     driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
@@ -480,12 +426,9 @@ def test_form_auth_errors():
     
     assert 'username' in error_bar.text
 
-    driver.quit()
 
+def test_status_codes(driver):
 
-def test_status_codes():
-
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Status Codes"]').click()
@@ -502,12 +445,9 @@ def test_status_codes():
         driver.find_element('xpath', '//a[text()="here"]').click()
         assert driver.current_url.endswith('/status_codes')
 
-    driver.quit()
 
+def test_status_codes_response(driver):
 
-def test_status_codes_response():
-
-    driver = driver_factory.get_driver()
     driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Status Codes"]').click()
@@ -521,5 +461,3 @@ def test_status_codes_response():
         assert str(status) == code
 
         driver.back()
-
-    driver.quit()

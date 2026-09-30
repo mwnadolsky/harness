@@ -1,5 +1,5 @@
 import pytest
-from driver_factory import set_headless
+from driver_factory import driver_factory
 
 
 def pytest_addoption(parser):
@@ -11,6 +11,8 @@ def pytest_addoption(parser):
     )
 
 
-def pytest_configure(config):
-    headed = config.getoption("-H")
-    set_headless(not headed)
+@pytest.fixture
+def driver(request):
+    driver = driver_factory.get_driver(headed=request.config.getoption("--headed"))
+    yield driver
+    driver.quit()
