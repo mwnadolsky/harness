@@ -6,7 +6,7 @@
 
 ## Context
 
-`DriverFactory.get_driver()` should give every test a browser that fills the screen, headed or headless.
+`DriverManager.start()` (originally `DriverFactory.get_driver()`) should give every test a browser that fills the screen, headed or headless.
 
 The first version passed Chrome's `--start-fullscreen` flag. Headless runs were fine, but headed runs (`pytest -H`) on macOS usually opened at Chrome's default 1200×950 window. Fixing that turned up a second, bigger problem with fullscreen itself.
 
@@ -73,7 +73,7 @@ A general "wait until the page has settled" check (network, DOM, and layout quie
 - **Drop `--start-fullscreen`**, because macOS ignores Chrome's startup fullscreen request when another app, like the terminal running pytest, has focus at launch.
 - **Maximize instead of going fullscreen**, because macOS's fullscreen animation and separate desktop space made mouse actions (right-click, click at an offset, drag, hover) miss or fail, while a maximized window passed every test with no wait.
 - **Use the `--start-maximized` flag rather than the `maximize_window()` method**, because both passed the same tests, and a startup flag next to the other browser options is easier for people to read and understand.
-- **Set it in `get_driver()`**, so every driver gets it, whether it comes from the `driver` fixture or a direct call.
+- **Set it in `DriverManager.start()`** (originally `DriverFactory.get_driver()`), so every driver gets it, whether it's started by the `driver` fixture or a direct call.
 - **Set it at launch**, so the window opens maximized and pages load at full size from the start.
 
 ## Consequences
