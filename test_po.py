@@ -21,8 +21,8 @@ def test_checkboxes(driver):
     assert not box_1.is_selected()
     assert box_2.is_selected()
 
-    box_1.click()
-    box_2.click()
+    page.cb1.toggle()
+    page.cb2.toggle()
 
     assert box_1.is_selected()
     assert not box_2.is_selected()

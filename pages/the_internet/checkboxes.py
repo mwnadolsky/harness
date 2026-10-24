@@ -9,3 +9,4 @@ class CheckboxesPage(BasePage):
     checkbox2 = '//input[following-sibling::text()[1][normalize-space()="checkbox 2"]]'
 
     cb1 = Checkbox(('xpath', checkbox1))
+    cb2 = Checkbox(('xpath', checkbox2))
