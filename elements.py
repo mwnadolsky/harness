@@ -40,20 +40,12 @@ class Checkbox(BaseElement):
     def check(self):
         # toggles unchecked checkboxes but not checked ones.
 
-        wait(driver_manager.driver, 10).until(EC.element_to_be_clickable(self.locator))
-        if self.element().is_selected():
-            pass
-        else:
-            self.element().click()
+        if not self.element().is_selected(): self.element().toggle()
 
     def uncheck(self):
         # toggles checked checkboxes but not unchecked ones.
 
-        wait(driver_manager.driver, 10).until(EC.element_to_be_clickable(self.locator))
-        if self.element().is_selected():
-            self.element().click()
-        else:
-            pass
+        if self.element().is_selected(): self.element().toggle()
 
 
 class Link(BaseElement):
