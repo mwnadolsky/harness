@@ -12,7 +12,7 @@ class Checkbox:
     def element(self):
 
         wait(driver_manager.driver, 10).until(
-            EC.visibility_of_element_located(self.locator))
+            EC.presence_of_element_located(self.locator))
         return driver_manager.driver.find_element(*self.locator)
 
     def toggle(self):
