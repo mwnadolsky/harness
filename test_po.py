@@ -33,20 +33,18 @@ def test_dropdown(driver):
 
     driver.get("https://the-internet.herokuapp.com/")
 
+    page = HomePage
+
+    page.dropdown_link.click()
+
     page = DropdownPage
 
-    HomePage.dropdown_link.click()
+    page.option_dropdown.click()
+    page.option_dropdown.option("Option 1").click()
 
-    dropdown = driver.find_element('xpath', page.dropdown)
-    option_1 = driver.find_element('xpath', page.option1)
-    option_2 = driver.find_element('xpath', page.option2)
+    assert page.option_dropdown.option("Option 1").is_selected()
 
-    dropdown.click()
-    option_1.click()
+    page.option_dropdown.click()
+    page.option_dropdown.option("Option 2").click()
 
-    assert option_1.is_selected()
-
-    dropdown.click()
-    option_2.click()
-
-    assert option_2.is_selected()
+    assert page.option_dropdown.option("Option 2").is_selected()

@@ -4,7 +4,7 @@ Each element is created with a locator, e.g. Checkbox(('xpath', '//input')),
 and finds itself in the current browser (driver_manager.driver) each time it's used.
 """
 
-from selenium.webdriver.support.ui import WebDriverWait as wait
+from selenium.webdriver.support.ui import Select, WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 
 from driver_manager import driver_manager
@@ -22,11 +22,6 @@ class BaseElement:
         """Store the locator, a (strategy, value) pair such as ('xpath', '//h3')."""
         self.locator = locator
 
-    def element(self):
-        """Wait for the element to exist, then return it as a Selenium WebElement."""
-        return wait(driver_manager.driver, 10).until(
-            EC.presence_of_element_located(self.locator))
-
     def __getattr__(self, name):
         """Pass any attribute this class doesn't define to the Selenium WebElement."""
         # never delegate dunder names: Python and tools (copy, pickle, debuggers) probe for them,
@@ -34,6 +29,11 @@ class BaseElement:
         if name.startswith("__") and name.endswith("__"):
             raise AttributeError(name)
         return getattr(self.element(), name)
+
+    def element(self):
+        """Wait for the element to exist, then return it as a Selenium WebElement."""
+        return wait(driver_manager.driver, 10).until(
+            EC.presence_of_element_located(self.locator))
 
 
 class Button(BaseElement):
@@ -57,6 +57,37 @@ class Checkbox(BaseElement):
         """Uncheck the checkbox if it's currently checked."""
         if self.element().is_selected():
             self.toggle()
+
+
+class Dropdown(BaseElement):
+    """A dropdown (a <select> element)."""
+
+    def __getattr__(self, name):
+        """Pass undefined attributes to Selenium's Select helper, or else to the WebElement."""
+        # never delegate dunder names (see BaseElement.__getattr__)
+        if name.startswith("__") and name.endswith("__"):
+            raise AttributeError(name)
+        el = self.element()
+        select = Select(el)
+        if hasattr(select, name):
+            return getattr(select, name)
+        return getattr(el, name)
+
+    def option(self, text):
+        """Return the option with the given visible text, waiting for it to appear."""
+        locator = ('xpath', f'./option[normalize-space()="{text}"]')
+        # search within this dropdown's <select>, so an option in another dropdown can't match
+        return wait(driver_manager.driver, 10).until(
+            lambda driver: self.element().find_element(*locator))
+
+    def select(self, choice):
+        """Select an option by its visible text (a str) or its index (an int)."""
+        if isinstance(choice, int):
+            self.select_by_index(choice)
+        elif isinstance(choice, str):
+            self.select_by_visible_text(choice)
+        else:
+            raise TypeError(f"select() takes option text (str) or an index (int), not {type(choice).__name__}")
 
 
 class Link(BaseElement):
