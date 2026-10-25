@@ -32,11 +32,13 @@ class Button(BaseElement):
 class Checkbox(BaseElement):
 
     def toggle(self):
+        # toggles a checkbox regardless of state
 
         wait(driver_manager.driver, 10).until(EC.element_to_be_clickable(self.locator))
         self.element().click()
 
     def check(self):
+        # toggles unchecked checkboxes but not checked ones.
 
         wait(driver_manager.driver, 10).until(EC.element_to_be_clickable(self.locator))
         if self.element().is_selected():
@@ -45,6 +47,7 @@ class Checkbox(BaseElement):
             self.element().click()
 
     def uncheck(self):
+        # toggles checked checkboxes but not unchecked ones.
 
         wait(driver_manager.driver, 10).until(EC.element_to_be_clickable(self.locator))
         if self.element().is_selected():
