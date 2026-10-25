@@ -39,12 +39,12 @@ def test_dropdown(driver):
 
     page = DropdownPage
 
-    page.dropdown_dropdown.click()
-    page.dropdown_dropdown.option("Option 1").click()
+    page.option_dropdown.click()
+    page.option_dropdown.option("Option 1").click()
 
-    assert page.dropdown_dropdown.option("Option 1").is_selected()
+    assert page.option_dropdown.option("Option 1").is_selected()
 
-    page.dropdown_dropdown.click()
-    page.dropdown_dropdown.option("Option 2").click()
+    page.option_dropdown.click()
+    page.option_dropdown.option("Option 2").click()
 
-    assert page.dropdown_dropdown.option("Option 2").is_selected()
+    assert page.option_dropdown.option("Option 2").is_selected()

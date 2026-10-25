@@ -8,4 +8,4 @@ class DropdownPage(BasePage):
     """Page object for the Dropdown page."""
 
     header_text = Text(('xpath', '//h3'))
-    dropdown_dropdown = Dropdown(('xpath', '//select[@id="dropdown"]'))
+    option_dropdown = Dropdown(('xpath', '//select[@id="dropdown"]'))
