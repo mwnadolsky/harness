@@ -22,11 +22,6 @@ class BaseElement:
         """Store the locator, a (strategy, value) pair such as ('xpath', '//h3')."""
         self.locator = locator
 
-    def element(self):
-        """Wait for the element to exist, then return it as a Selenium WebElement."""
-        return wait(driver_manager.driver, 10).until(
-            EC.presence_of_element_located(self.locator))
-
     def __getattr__(self, name):
         """Pass any attribute this class doesn't define to the Selenium WebElement."""
         # never delegate dunder names: Python and tools (copy, pickle, debuggers) probe for them,
@@ -34,6 +29,11 @@ class BaseElement:
         if name.startswith("__") and name.endswith("__"):
             raise AttributeError(name)
         return getattr(self.element(), name)
+
+    def element(self):
+        """Wait for the element to exist, then return it as a Selenium WebElement."""
+        return wait(driver_manager.driver, 10).until(
+            EC.presence_of_element_located(self.locator))
 
 
 class Button(BaseElement):
@@ -62,6 +62,17 @@ class Checkbox(BaseElement):
 class Dropdown(BaseElement):
     """A dropdown (a <select> element)."""
 
+    def __getattr__(self, name):
+        """Pass undefined attributes to Selenium's Select helper, or else to the WebElement."""
+        # never delegate dunder names (see BaseElement.__getattr__)
+        if name.startswith("__") and name.endswith("__"):
+            raise AttributeError(name)
+        el = self.element()
+        select = Select(el)
+        if hasattr(select, name):
+            return getattr(select, name)
+        return getattr(el, name)
+
     def option(self, text):
         """Return the option with the given visible text, waiting for it to appear."""
         locator = ('xpath', f'./option[normalize-space()="{text}"]')
@@ -77,17 +88,6 @@ class Dropdown(BaseElement):
             self.select_by_visible_text(choice)
         else:
             raise TypeError(f"select() takes option text (str) or an index (int), not {type(choice).__name__}")
-
-    def __getattr__(self, name):
-        """Pass undefined attributes to Selenium's Select helper, or else to the WebElement."""
-        # never delegate dunder names (see BaseElement.__getattr__)
-        if name.startswith("__") and name.endswith("__"):
-            raise AttributeError(name)
-        el = self.element()
-        select = Select(el)
-        if hasattr(select, name):
-            return getattr(select, name)
-        return getattr(el, name)
 
 
 class Link(BaseElement):
