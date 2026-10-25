@@ -13,16 +13,17 @@ def test_checkboxes(driver):
 
     page = CheckboxesPage
 
-    driver.find_element('xpath', HomePage.checkboxes).click()
+    HomePage.checkboxes_link.click()
 
-    assert not page.checkbox1.is_selected()
-    assert page.checkbox2.is_selected()
+    assert page.header_text.text == "Checkboxes"
+    assert not page.checkbox_1_checkbox.is_selected()
+    assert page.checkbox_2_checkbox.is_selected()
 
-    page.checkbox1.toggle()
-    page.checkbox2.toggle()
+    page.checkbox_1_checkbox.toggle()
+    page.checkbox_2_checkbox.toggle()
 
-    assert page.checkbox1.is_selected()
-    assert not page.checkbox2.is_selected()
+    assert page.checkbox_1_checkbox.is_selected()
+    assert not page.checkbox_2_checkbox.is_selected()
 
 
 @pytest.mark.smoke
@@ -32,7 +33,7 @@ def test_dropdown(driver):
 
     page = DropdownPage
 
-    driver.find_element('xpath', HomePage.dropdown).click()
+    HomePage.dropdown_link.click()
 
     dropdown = driver.find_element('xpath', page.dropdown)
     option_1 = driver.find_element('xpath', page.option1)
