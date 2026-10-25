@@ -11,9 +11,11 @@ def test_checkboxes(driver):
 
     driver.get("https://the-internet.herokuapp.com")
 
-    page = CheckboxesPage
+    page = HomePage
 
-    HomePage.checkboxes_link.click()
+    page.checkboxes_link.click()
+
+    page = CheckboxesPage
 
     assert page.header_text.text == "Checkboxes"
     assert not page.checkbox_1_checkbox.is_selected()
