@@ -4,7 +4,7 @@ Each element is created with a locator, e.g. Checkbox(('xpath', '//input')),
 and finds itself in the current browser (driver_manager.driver) each time it's used.
 """
 
-from selenium.webdriver.support.ui import WebDriverWait as wait
+from selenium.webdriver.support.ui import Select, WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 
 from driver_manager import driver_manager
@@ -59,8 +59,35 @@ class Checkbox(BaseElement):
             self.toggle()
 
 
+class Dropdown(BaseElement):
+    """A dropdown (a <select> element)."""
+
+    def option(self, text):
+        """Return the dropdown's option with the given visible text."""
+        return Option(self, text)
+
+    def select(self, text):
+        """Select the option with the given visible text."""
+        Select(self.element()).select_by_visible_text(text)
+
+
 class Link(BaseElement):
     """A link. Actions like click() come from the Selenium element."""
+
+
+class Option(BaseElement):
+    """An option in a Dropdown, found by its visible text."""
+
+    def __init__(self, dropdown, text):
+        """Store the Dropdown this option belongs to and the option's visible text."""
+        super().__init__(('xpath', f'./option[normalize-space()="{text}"]'))
+        self.dropdown = dropdown
+
+    def element(self):
+        """Wait for the option to exist inside its dropdown, then return it."""
+        # search within the dropdown's <select>, so an option in another dropdown can't match
+        return wait(driver_manager.driver, 10).until(
+            lambda driver: self.dropdown.element().find_element(*self.locator))
 
 
 class Text(BaseElement):
