@@ -69,9 +69,16 @@ class Dropdown(BaseElement):
         return wait(driver_manager.driver, 10).until(
             lambda driver: self.element().find_element(*locator))
 
-    def select(self, text):
-        """Select the option with the given visible text."""
-        Select(self.element()).select_by_visible_text(text)
+    def __getattr__(self, name):
+        """Pass undefined attributes to Selenium's Select helper, or else to the WebElement."""
+        # never delegate dunder names (see BaseElement.__getattr__)
+        if name.startswith("__") and name.endswith("__"):
+            raise AttributeError(name)
+        el = self.element()
+        select = Select(el)
+        if hasattr(select, name):
+            return getattr(select, name)
+        return getattr(el, name)
 
 
 class Link(BaseElement):
