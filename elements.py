@@ -63,8 +63,11 @@ class Dropdown(BaseElement):
     """A dropdown (a <select> element)."""
 
     def option(self, text):
-        """Return the dropdown's option with the given visible text."""
-        return Option(self, text)
+        """Return the option with the given visible text, waiting for it to appear."""
+        locator = ('xpath', f'./option[normalize-space()="{text}"]')
+        # search within this dropdown's <select>, so an option in another dropdown can't match
+        return wait(driver_manager.driver, 10).until(
+            lambda driver: self.element().find_element(*locator))
 
     def select(self, text):
         """Select the option with the given visible text."""
@@ -73,21 +76,6 @@ class Dropdown(BaseElement):
 
 class Link(BaseElement):
     """A link. Actions like click() come from the Selenium element."""
-
-
-class Option(BaseElement):
-    """An option in a Dropdown, found by its visible text."""
-
-    def __init__(self, dropdown, text):
-        """Store the Dropdown this option belongs to and the option's visible text."""
-        super().__init__(('xpath', f'./option[normalize-space()="{text}"]'))
-        self.dropdown = dropdown
-
-    def element(self):
-        """Wait for the option to exist inside its dropdown, then return it."""
-        # search within the dropdown's <select>, so an option in another dropdown can't match
-        return wait(driver_manager.driver, 10).until(
-            lambda driver: self.dropdown.element().find_element(*self.locator))
 
 
 class Text(BaseElement):
