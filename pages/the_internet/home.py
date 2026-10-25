@@ -1,52 +1,53 @@
 from pages.the_internet.base import BasePage
+from elements import Link, Text
 
 
 class HomePage(BasePage):
 
-    header1 = '//h1'
-    header2 = '//h2'
+    header1_text = Text(('xpath', '//h1'))
+    header2_text = Text(('xpath', '//h2'))
 
-    ab_testing = '//a[text()="A/B Testing"]'
-    add_remove_elements = '//a[text()="Add/Remove Elements"]'
-    basic_auth = '//a[text()="Basic Auth"]'
-    broken_images = '//a[text()="Broken Images"]'
-    challenging_dom = '//a[text()="Challenging DOM"]'
-    checkboxes = '//a[text()="Checkboxes"]'
-    context_menu = '//a[text()="Context Menu"]'
-    digest_authentication = '//a[text()="Digest Authentication"]'
-    disappearing_elements = '//a[text()="Disappearing Elements"]'
-    drag_and_drop = '//a[text()="Drag and Drop"]'
-    dropdown = '//a[text()="Dropdown"]'
-    dynamic_content = '//a[text()="Dynamic Content"]'
-    dynamic_controls = '//a[text()="Dynamic Controls"]'
-    dynamic_loading = '//a[text()="Dynamic Loading"]'
-    entry_ad = '//a[text()="Entry Ad"]'
-    exit_intent = '//a[text()="Exit Intent"]'
-    file_download = '//a[text()="File Download"]'
-    file_upload = '//a[text()="File Upload"]'
-    floating_menu = '//a[text()="Floating Menu"]'
-    forgot_password = '//a[text()="Forgot Password"]'
-    form_authentication = '//a[text()="Form Authentication"]'
-    frames = '//a[text()="Frames"]'
-    geolocation = '//a[text()="Geolocation"]'
-    horizontal_slider = '//a[text()="Horizontal Slider"]'
-    hovers = '//a[text()="Hovers"]'
-    infinite_scroll = '//a[text()="Infinite Scroll"]'
-    inputs = '//a[text()="Inputs"]'
-    jquery_ui_menus = '//a[text()="JQuery UI Menus"]'
-    javascript_alerts = '//a[text()="JavaScript Alerts"]'
-    javascript_onload_event_error = '//a[text()="JavaScript onload event error"]'
-    key_presses = '//a[text()="Key Presses"]'
-    large_and_deep_dom = '//a[text()="Large & Deep DOM"]'
-    multiple_windows = '//a[text()="Multiple Windows"]'
-    nested_frames = '//a[text()="Nested Frames"]'
-    notification_messages = '//a[text()="Notification Messages"]'
-    redirect_link = '//a[text()="Redirect Link"]'
-    secure_file_download = '//a[text()="Secure File Download"]'
-    shadow_dom = '//a[text()="Shadow DOM"]'
-    shifting_content = '//a[text()="Shifting Content"]'
-    slow_resources = '//a[text()="Slow Resources"]'
-    sortable_data_tables = '//a[text()="Sortable Data Tables"]'
-    status_codes = '//a[text()="Status Codes"]'
-    typos = '//a[text()="Typos"]'
-    wysiwyg_editor = '//a[text()="WYSIWYG Editor"]'
+    ab_testing_link = Link(('xpath', '//a[text()="A/B Testing"]'))
+    add_remove_elements_link = Link(('xpath', '//a[text()="Add/Remove Elements"]'))
+    basic_auth_link = Link(('xpath', '//a[text()="Basic Auth"]'))
+    broken_images_link = Link(('xpath', '//a[text()="Broken Images"]'))
+    challenging_dom_link = Link(('xpath', '//a[text()="Challenging DOM"]'))
+    checkboxes_link = Link(('xpath', '//a[text()="Checkboxes"]'))
+    context_menu_link = Link(('xpath', '//a[text()="Context Menu"]'))
+    digest_authentication_link = Link(('xpath', '//a[text()="Digest Authentication"]'))
+    disappearing_elements_link = Link(('xpath', '//a[text()="Disappearing Elements"]'))
+    drag_and_drop_link = Link(('xpath', '//a[text()="Drag and Drop"]'))
+    dropdown_link = Link(('xpath', '//a[text()="Dropdown"]'))
+    dynamic_content_link = Link(('xpath', '//a[text()="Dynamic Content"]'))
+    dynamic_controls_link = Link(('xpath', '//a[text()="Dynamic Controls"]'))
+    dynamic_loading_link = Link(('xpath', '//a[text()="Dynamic Loading"]'))
+    entry_ad_link = Link(('xpath', '//a[text()="Entry Ad"]'))
+    exit_intent_link = Link(('xpath', '//a[text()="Exit Intent"]'))
+    file_download_link = Link(('xpath', '//a[text()="File Download"]'))
+    file_upload_link = Link(('xpath', '//a[text()="File Upload"]'))
+    floating_menu_link = Link(('xpath', '//a[text()="Floating Menu"]'))
+    forgot_password_link = Link(('xpath', '//a[text()="Forgot Password"]'))
+    form_authentication_link = Link(('xpath', '//a[text()="Form Authentication"]'))
+    frames_link = Link(('xpath', '//a[text()="Frames"]'))
+    geolocation_link = Link(('xpath', '//a[text()="Geolocation"]'))
+    horizontal_slider_link = Link(('xpath', '//a[text()="Horizontal Slider"]'))
+    hovers_link = Link(('xpath', '//a[text()="Hovers"]'))
+    infinite_scroll_link = Link(('xpath', '//a[text()="Infinite Scroll"]'))
+    inputs_link = Link(('xpath', '//a[text()="Inputs"]'))
+    jquery_ui_menus_link = Link(('xpath', '//a[text()="JQuery UI Menus"]'))
+    javascript_alerts_link = Link(('xpath', '//a[text()="JavaScript Alerts"]'))
+    javascript_onload_event_error_link = Link(('xpath', '//a[text()="JavaScript onload event error"]'))
+    key_presses_link = Link(('xpath', '//a[text()="Key Presses"]'))
+    large_and_deep_dom_link = Link(('xpath', '//a[text()="Large & Deep DOM"]'))
+    multiple_windows_link = Link(('xpath', '//a[text()="Multiple Windows"]'))
+    nested_frames_link = Link(('xpath', '//a[text()="Nested Frames"]'))
+    notification_messages_link = Link(('xpath', '//a[text()="Notification Messages"]'))
+    redirect_link_link = Link(('xpath', '//a[text()="Redirect Link"]'))
+    secure_file_download_link = Link(('xpath', '//a[text()="Secure File Download"]'))
+    shadow_dom_link = Link(('xpath', '//a[text()="Shadow DOM"]'))
+    shifting_content_link = Link(('xpath', '//a[text()="Shifting Content"]'))
+    slow_resources_link = Link(('xpath', '//a[text()="Slow Resources"]'))
+    sortable_data_tables_link = Link(('xpath', '//a[text()="Sortable Data Tables"]'))
+    status_codes_link = Link(('xpath', '//a[text()="Status Codes"]'))
+    typos_link = Link(('xpath', '//a[text()="Typos"]'))
+    wysiwyg_editor_link = Link(('xpath', '//a[text()="WYSIWYG Editor"]'))
