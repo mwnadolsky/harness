@@ -15,14 +15,14 @@ def test_checkboxes(driver):
 
     driver.find_element('xpath', HomePage.checkboxes).click()
 
-    box_1 = driver.find_element('xpath', page.checkbox1)
-    box_2 = driver.find_element('xpath', page.checkbox2)
+    box_1 = page.checkbox1.element()
+    box_2 = page.checkbox2.element()
 
     assert not box_1.is_selected()
     assert box_2.is_selected()
 
-    box_1.click()
-    box_2.click()
+    page.checkbox1.toggle()
+    page.checkbox2.toggle()
 
     assert box_1.is_selected()
     assert not box_2.is_selected()
