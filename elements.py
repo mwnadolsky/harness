@@ -24,9 +24,8 @@ class BaseElement:
 
     def element(self):
         """Wait for the element to exist, then return it as a Selenium WebElement."""
-        wait(driver_manager.driver, 10).until(
+        return wait(driver_manager.driver, 10).until(
             EC.presence_of_element_located(self.locator))
-        return driver_manager.driver.find_element(*self.locator)
 
     def __getattr__(self, name):
         """Pass any attribute this class doesn't define to the Selenium WebElement."""
