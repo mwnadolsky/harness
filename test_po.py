@@ -15,17 +15,14 @@ def test_checkboxes(driver):
 
     driver.find_element('xpath', HomePage.checkboxes).click()
 
-    box_1 = page.checkbox1.element()
-    box_2 = page.checkbox2.element()
-
-    assert not box_1.is_selected()
-    assert box_2.is_selected()
+    assert not page.checkbox1.is_selected()
+    assert page.checkbox2.is_selected()
 
     page.checkbox1.toggle()
     page.checkbox2.toggle()
 
-    assert box_1.is_selected()
-    assert not box_2.is_selected()
+    assert page.checkbox1.is_selected()
+    assert not page.checkbox2.is_selected()
 
 
 @pytest.mark.smoke
