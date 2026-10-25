@@ -36,6 +36,22 @@ class Checkbox(BaseElement):
         wait(driver_manager.driver, 10).until(EC.element_to_be_clickable(self.locator))
         self.element().click()
 
+    def check(self):
+
+        wait(driver_manager.driver, 10).until(EC.element_to_be_clickable(self.locator))
+        if self.element().is_selected():
+            pass
+        else:
+            self.element().click()
+
+    def uncheck(self):
+
+        wait(driver_manager.driver, 10).until(EC.element_to_be_clickable(self.locator))
+        if self.element().is_selected():
+            self.element().click()
+        else:
+            pass
+
 
 class Link(BaseElement):
     pass
