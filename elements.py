@@ -40,12 +40,14 @@ class Checkbox(BaseElement):
     def check(self):
         # toggles unchecked checkboxes but not checked ones.
 
-        if not self.element().is_selected(): self.element().toggle()
+        if not self.element().is_selected():
+            self.toggle()
 
     def uncheck(self):
         # toggles checked checkboxes but not unchecked ones.
 
-        if self.element().is_selected(): self.element().toggle()
+        if self.element().is_selected():
+            self.toggle()
 
 
 class Link(BaseElement):
