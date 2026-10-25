@@ -1,8 +1,11 @@
+"""Page object for the-internet's home page (/)."""
+
 from pages.the_internet.base import BasePage
 from elements import Link, Text
 
 
 class HomePage(BasePage):
+    """The home page: its headings and a link to every example page."""
 
     header1_text = Text(('xpath', '//h1'))
     header2_text = Text(('xpath', '//h2'))
