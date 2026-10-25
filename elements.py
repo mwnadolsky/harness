@@ -25,6 +25,10 @@ class BaseElement:
         return getattr(self.element(), name)
 
 
+class Button(BaseElement):
+    pass
+
+
 class Checkbox(BaseElement):
 
     def toggle(self):

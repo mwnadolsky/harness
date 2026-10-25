@@ -16,14 +16,14 @@ def test_checkboxes(driver):
     HomePage.checkboxes_link.click()
 
     assert page.header_text.text == "Checkboxes"
-    assert not page.checkbox1.is_selected()
-    assert page.checkbox2.is_selected()
+    assert not page.checkbox_1_checkbox.is_selected()
+    assert page.checkbox_2_checkbox.is_selected()
 
-    page.checkbox1.toggle()
-    page.checkbox2.toggle()
+    page.checkbox_1_checkbox.toggle()
+    page.checkbox_2_checkbox.toggle()
 
-    assert page.checkbox1.is_selected()
-    assert not page.checkbox2.is_selected()
+    assert page.checkbox_1_checkbox.is_selected()
+    assert not page.checkbox_2_checkbox.is_selected()
 
 
 @pytest.mark.smoke
