@@ -1,4 +1,4 @@
-"""Pytest configuration: the -H/--headed option and the driver fixture."""
+"""Pytest configuration: options and fixtures."""
 
 import pytest
 from driver_manager import driver_manager

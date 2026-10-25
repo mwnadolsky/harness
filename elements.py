@@ -42,7 +42,7 @@ class Button(BaseElement):
 
 
 class Checkbox(BaseElement):
-    """A checkbox, with methods to toggle, check, and uncheck it."""
+    """A checkbox."""
 
     def toggle(self):
         """Click the checkbox, flipping it between checked and unchecked."""

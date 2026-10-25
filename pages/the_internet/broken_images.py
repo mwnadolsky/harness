@@ -4,7 +4,7 @@ from pages.the_internet.base import BasePage
 
 
 class BrokenImagesPage(BasePage):
-    """The Broken Images page: two broken images and one working one."""
+    """Page object for the Broken Images page."""
 
     header = '//h3'
     images = '//div[@class="example"]/img'

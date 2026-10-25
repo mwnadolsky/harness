@@ -5,7 +5,7 @@ from elements import Checkbox, Text
 
 
 class CheckboxesPage(BasePage):
-    """The Checkboxes page: a heading and two checkboxes."""
+    """Page object for the Checkboxes page."""
 
     header_text = Text(('xpath', '//h3'))
     checkbox_1_checkbox = Checkbox(('xpath', '//input[following-sibling::text()[1][normalize-space()="checkbox 1"]]'))

@@ -4,7 +4,7 @@ from pages.the_internet.base import BasePage
 
 
 class DropdownPage(BasePage):
-    """The Dropdown page: a heading and a dropdown with two options."""
+    """Page object for the Dropdown page."""
 
     header = '//h3'
     dropdown = '//select[@id="dropdown"]'

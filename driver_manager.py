@@ -1,21 +1,20 @@
-"""Start, hold, and quit the browser that tests and page elements use."""
+"""Manager for the Selenium driver."""
 
 from selenium import webdriver
 
 
 class DriverManager:
-    """Hold the current Chrome WebDriver and control when it starts and quits.
+    """Hold the current WebDriver and control when it starts and quits.
 
     The driver fixture calls start() before each test and quit() after it.
     Other code, such as page elements, reads the current browser from .driver.
     """
 
     def __init__(self):
-        """Create the manager with no browser running."""
         self.driver = None
 
     def start(self, headed=False):
-        """Start a maximized Chrome WebDriver and make it the current driver.
+        """Start a maximized WebDriver and make it the current driver.
 
         The browser runs headless unless headed is True. Returns the new
         driver, which is also stored as self.driver.
