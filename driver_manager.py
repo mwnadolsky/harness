@@ -1,13 +1,24 @@
+"""Manager for the Selenium driver."""
+
 from selenium import webdriver
 
 
 class DriverManager:
+    """Hold the current WebDriver and control when it starts and quits.
+
+    The driver fixture calls start() before each test and quit() after it.
+    Other code, such as page elements, reads the current browser from .driver.
+    """
 
     def __init__(self):
         self.driver = None
 
     def start(self, headed=False):
-        """Start a Chrome WebDriver and keep it as the current driver."""
+        """Start a maximized WebDriver and make it the current driver.
+
+        The browser runs headless unless headed is True. Returns the new
+        driver, which is also stored as self.driver.
+        """
         options = webdriver.ChromeOptions()
         # maximize, not fullscreen: macOS native fullscreen breaks ActionChains in headed runs
         # (see docs/decisions/0001-maximize-window.md)
@@ -22,7 +33,7 @@ class DriverManager:
         return self.driver
 
     def quit(self):
-        """Quit the current driver."""
+        """Quit the current driver and set self.driver back to None."""
         self.driver.quit()
         self.driver = None
 
