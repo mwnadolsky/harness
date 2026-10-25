@@ -19,3 +19,12 @@ class Checkbox:
 
         wait(driver_manager.driver, 10).until(EC.element_to_be_clickable(self.locator))
         self.element().click()
+
+    # only called for names Checkbox doesn't define; hands them to the Selenium element
+    # (e.g. click, is_selected, text)
+    def __getattr__(self, name):
+        # never delegate dunder names: Python and tools (copy, pickle, debuggers) probe for them,
+        # and delegating would hit the browser or recurse forever on half-built objects
+        if name.startswith("__") and name.endswith("__"):
+            raise AttributeError(name)
+        return getattr(self.element(), name)
