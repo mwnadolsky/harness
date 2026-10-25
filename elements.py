@@ -69,6 +69,15 @@ class Dropdown(BaseElement):
         return wait(driver_manager.driver, 10).until(
             lambda driver: self.element().find_element(*locator))
 
+    def select(self, choice):
+        """Select an option by its visible text (a str) or its index (an int)."""
+        if isinstance(choice, int):
+            self.select_by_index(choice)
+        elif isinstance(choice, str):
+            self.select_by_visible_text(choice)
+        else:
+            raise TypeError(f"select() takes option text (str) or an index (int), not {type(choice).__name__}")
+
     def __getattr__(self, name):
         """Pass undefined attributes to Selenium's Select helper, or else to the WebElement."""
         # never delegate dunder names (see BaseElement.__getattr__)
