@@ -1,9 +1,26 @@
 import pytest
+from pages.the_internet.broken_images import BrokenImagesPage
 from pages.the_internet.checkboxes import CheckboxesPage
 from pages.the_internet.dropdown import DropdownPage
 from pages.the_internet.home import HomePage
 
 pytestmark = pytest.mark.regression_po
+
+
+def test_broken_images(driver):
+
+    driver.get("https://the-internet.herokuapp.com")
+
+    page = HomePage
+
+    page.broken_images_link.click()
+
+    page = BrokenImagesPage
+
+    assert page.header_text.text == "Broken Images"
+    assert page.image_1_image.is_broken()
+    assert page.image_2_image.is_broken()
+    assert not page.image_3_image.is_broken()
 
 
 @pytest.mark.smoke
