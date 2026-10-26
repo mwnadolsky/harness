@@ -90,6 +90,15 @@ class Dropdown(BaseElement):
             raise TypeError(f"select() takes option text (str) or an index (int), not {type(choice).__name__}")
 
 
+class Image(BaseElement):
+    """An image."""
+
+    def is_broken(self):
+        """Return True if the image failed to load."""
+        # an image that loaded has a natural (intrinsic) width; a broken one has 0
+        return self.element().get_property("naturalWidth") == 0
+
+
 class Link(BaseElement):
     """A link. Actions like click() come from the Selenium element."""
 
