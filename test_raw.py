@@ -106,7 +106,10 @@ def test_challenging_dom_three_buttons(driver):
     button_text2_b = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
     button_text3_b = driver.find_element('xpath', '//a[contains(@class, "button success")]').text
 
-    driver.find_element('xpath', '//a[contains(@class, "button")]').click()
+    top_button = driver.find_element('xpath', '//a[contains(@class, "button")]')
+    top_button.click()
+    # the click reloads the page with new labels; wait for the old page to go away before reading them
+    WebDriverWait(driver, 10).until(EC.staleness_of(top_button))
 
     button_text1_a = driver.find_element('xpath', '//a[contains(@class, "button")]').text
     button_text2_a = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
