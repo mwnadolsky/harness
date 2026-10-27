@@ -2,7 +2,7 @@
 
 Each element is created with a locator, e.g. Checkbox(('xpath', '//input')),
 and finds itself in the current browser (driver_manager.driver) each time it's used.
-An element whose locator matches several elements also stands for the whole group.
+An element my use a locator that matches an element uniquely, or a locator that matches a group of elements. Groups of elements should be of the same type (e.g. all Buttons, all Fields, etc.)
 """
 
 from selenium.webdriver.support.ui import Select, WebDriverWait as wait
