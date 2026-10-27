@@ -18,15 +18,17 @@ class BaseElement:
     underlying Selenium WebElement, so click(), is_selected(), text, and the
     rest of WebElement work directly on elements.
 
-    When the locator matches several elements, count(), nth(), and all() work
-    with the group; on its own, an element is the first match.
+    A locator may match several elements. Without an index, the element is
+    the first match in page order; the others are ignored, with no error or
+    warning. Use count(), nth(), and all() to work with every match.
     """
 
     def __init__(self, locator, index=None):
         """Store the locator and which match to use.
 
         The locator is a (strategy, value) pair such as ('xpath', '//h3'). The
-        index picks the Nth match (counting from 0); None means the first.
+        index picks the Nth match (counting from 0). With no index, the element
+        is the first match, even if the locator matches more than one.
         """
         self.locator = locator
         self.index = index
@@ -40,7 +42,11 @@ class BaseElement:
         return getattr(self.element(), name)
 
     def element(self):
-        """Wait for the element to exist, then return it as a Selenium WebElement."""
+        """Wait for the element to exist, then return it as a Selenium WebElement.
+
+        Without an index this is the first match of the locator; with one, it's
+        the match at that index.
+        """
         if self.index is None:
             return wait(driver_manager.driver, 10).until(
                 EC.presence_of_element_located(self.locator))
