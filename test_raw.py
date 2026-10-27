@@ -99,30 +99,27 @@ def test_basic_auth_login(driver):
 
 def test_challenging_dom_three_buttons(driver):
 
+    button_locator = ('xpath', '//a[@class="button"]')
+    alert_button_locator = ('xpath', '//a[@class="button alert"]')
+    success_button_locator = ('xpath', '//a[@class="button success"]')
+
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//a[contains(@class, "button")]')))
-    
-    button_text1_b = driver.find_element('xpath', '//a[contains(@class, "button")]').text
-    button_text2_b = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
-    button_text3_b = driver.find_element('xpath', '//a[contains(@class, "button success")]').text
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(button_locator))
 
-    top_button = driver.find_element('xpath', '//a[contains(@class, "button")]')
-    top_button.click()
-    # the click reloads the page with new labels: wait for the old page to go away, then for the new buttons
-    WebDriverWait(driver, 10).until(EC.staleness_of(top_button))
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//a[contains(@class, "button")]')))
+    assert driver.find_element(*button_locator).value_of_css_property('background-color') == 'rgba(25, 35, 25, 1)'
+    assert driver.find_element(*alert_button_locator).value_of_css_property('background-color') == 'rgba(245, 85, 36, 1)'
+    assert driver.find_element(*success_button_locator).value_of_css_property('background-color') == 'rgba(171, 224, 130, 1)'
 
-    button_text1_a = driver.find_element('xpath', '//a[contains(@class, "button")]').text
-    button_text2_a = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
-    button_text3_a = driver.find_element('xpath', '//a[contains(@class, "button success")]').text
+    button = driver.find_element(*button_locator)
+    button.click()
+    # the click reloads the page with regenerated buttons: wait for the old page to go away, then for the new buttons
+    WebDriverWait(driver, 10).until(EC.staleness_of(button))
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(button_locator))
 
-    #This test is to verify that the text on the three buttons changes after the button is clicked
-
-    text_before_click = [button_text1_b, button_text2_b, button_text3_b]
-    text_after_click = [button_text1_a, button_text2_a, button_text3_a]
-
-    assert text_before_click != text_after_click, "the buttons texts before clicking the top button matches the text after clicking it"
+    assert driver.find_element(*button_locator).value_of_css_property('background-color') == 'rgba(25, 35, 25, 1)'
+    assert driver.find_element(*alert_button_locator).value_of_css_property('background-color') == 'rgba(245, 85, 36, 1)'
+    assert driver.find_element(*success_button_locator).value_of_css_property('background-color') == 'rgba(171, 224, 130, 1)'
 
 
 def test_challenging_dom_edit_delete_links(driver):
