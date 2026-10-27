@@ -101,6 +101,7 @@ def test_challenging_dom_three_buttons(driver):
 
     driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//a[contains(@class, "button")]')))
     
     button_text1_b = driver.find_element('xpath', '//a[contains(@class, "button")]').text
     button_text2_b = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
@@ -108,8 +109,9 @@ def test_challenging_dom_three_buttons(driver):
 
     top_button = driver.find_element('xpath', '//a[contains(@class, "button")]')
     top_button.click()
-    # the click reloads the page with new labels; wait for the old page to go away before reading them
+    # the click reloads the page with new labels: wait for the old page to go away, then for the new buttons
     WebDriverWait(driver, 10).until(EC.staleness_of(top_button))
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//a[contains(@class, "button")]')))
 
     button_text1_a = driver.find_element('xpath', '//a[contains(@class, "button")]').text
     button_text2_a = driver.find_element('xpath', '//a[contains(@class, "button alert")]').text
