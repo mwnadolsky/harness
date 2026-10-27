@@ -16,10 +16,12 @@ def pytest_addoption(parser):
 
 @pytest.fixture
 def driver(request):
-    """Start a browser for one test, yield it, and quit it afterward.
+    """Start a browser on the-internet's home page, yield it, and quit it afterward.
 
     The browser is headless unless pytest is run with -H/--headed. While the
     test runs, the same browser is also available as driver_manager.driver.
     """
-    yield driver_manager.start(headed=request.config.getoption("--headed"))
+    driver = driver_manager.start(headed=request.config.getoption("--headed"))
+    driver.get("https://the-internet.herokuapp.com/")
+    yield driver
     driver_manager.quit()

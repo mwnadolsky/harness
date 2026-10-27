@@ -11,14 +11,10 @@ pytestmark = pytest.mark.regression_raw
 @pytest.mark.smoke
 def test_title(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
-
     assert "The Internet" in driver.title
 
 
 def test_ab_testing(driver):
-
-    driver.get("https://the-internet.herokuapp.com/")
 
     link = driver.find_element('xpath', '//a[text()="A/B Testing"]')
     link.click()
@@ -32,8 +28,6 @@ def test_ab_testing(driver):
 
 def test_ab_testing_elemental_selenium_link(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
-
     link = driver.find_element('xpath', '//a[text()="A/B Testing"]')
     link.click()
 
@@ -46,8 +40,6 @@ def test_ab_testing_elemental_selenium_link(driver):
 
 
 def test_add_elements(driver):
-
-    driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
 
@@ -68,8 +60,6 @@ def test_add_elements(driver):
 
 
 def test_remove_elements(driver):
-
-    driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
 
@@ -122,7 +112,6 @@ def test_challenging_dom_three_buttons(driver):
 
 def test_challenging_dom_edit_delete_links(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Challenging DOM"]').click()
 
     edit_link_loc_1 = (by.XPATH, "(//a[text()='edit'])[1]")
@@ -194,7 +183,6 @@ def test_challenging_dom_edit_delete_links(driver):
 
 def test_broken_images(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
     driver.find_element('xpath', '//a[text()="Broken Images"]').click()
 
     images = driver.find_elements(by.TAG_NAME, 'img')
@@ -233,8 +221,6 @@ def test_checkboxes(driver):
 @pytest.mark.smoke
 def test_dropdown(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
-
     driver.find_element('xpath', '//a[text()="Dropdown"]').click()
 
     dropdown = driver.find_element('xpath', '//select[@id="dropdown"]')
@@ -254,8 +240,6 @@ def test_dropdown(driver):
 
 def test_context_menu(driver):
   
-    driver.get("https://the-internet.herokuapp.com/")
-
     driver.find_element('xpath', '//a[text()="Context Menu"]').click()
 
     hot_spot = driver.find_element("xpath", '//div[@id="hot-spot"]')
@@ -271,8 +255,6 @@ def test_context_menu(driver):
 
 def test_slider(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
-    
     actions = ActionChains(driver)
         
     driver.find_element('xpath', '//a[text()="Horizontal Slider"]').click()
@@ -306,8 +288,6 @@ def test_slider(driver):
 
 def test_drag_and_drop(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
-    
     actions = ActionChains(driver)
     
     driver.find_element('xpath', '//a[text()="Drag and Drop"]').click()
@@ -333,8 +313,6 @@ def test_drag_and_drop(driver):
 
 def test_js_alerts(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
-    
     alert = Alert(driver)
     
     driver.find_element('xpath', '//a[text()="JavaScript Alerts"]').click()
@@ -366,8 +344,6 @@ def test_js_alerts(driver):
 
 def test_hovers(driver):
     
-    driver.get("https://the-internet.herokuapp.com/")
-    
     actions = ActionChains(driver)
 
     driver.find_element('xpath', '//a[text()="Hovers"]').click()
@@ -383,8 +359,6 @@ def test_hovers(driver):
 
     
 def test_form_auth(driver):
-    driver.get("https://the-internet.herokuapp.com/")
-    
     driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
 
     driver.find_element(by.ID, 'username').send_keys('tomsmith')
@@ -398,8 +372,6 @@ def test_form_auth(driver):
 
 def test_form_auth_errors(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
-    
     driver.find_element('xpath', '//a[text()="Form Authentication"]').click()
 
     # Both Blank
@@ -429,8 +401,6 @@ def test_form_auth_errors(driver):
 
 def test_status_codes(driver):
 
-    driver.get("https://the-internet.herokuapp.com/")
-
     driver.find_element('xpath', '//a[text()="Status Codes"]').click()
 
     for code in ['200', '301', '404', '500']:
@@ -447,8 +417,6 @@ def test_status_codes(driver):
 
 
 def test_status_codes_response(driver):
-
-    driver.get("https://the-internet.herokuapp.com/")
 
     driver.find_element('xpath', '//a[text()="Status Codes"]').click()
 
