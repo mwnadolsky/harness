@@ -50,10 +50,11 @@ def test_ab_testing_elemental_selenium_link(driver):
 @pytest.mark.no_implicit_wait
 def test_add_elements(driver):
 
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//a[text()="Add/Remove Elements"]'))).click()
+    # explicit wait because this test skips the implicit wait: the home page may still be loading
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(('xpath', '//a[text()="Add/Remove Elements"]'))).click()
 
-    # finding the Add Element button first proves the page loaded, so the zero count below is real
-    add_element_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//button[text()="Add Element"]')))
+    # wait for the Add/Remove Elements page to load; finding its button first also proves the zero count below is real
+    add_element_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(('xpath', '//button[text()="Add Element"]')))
     buttons = driver.find_elements('xpath', '//button[@class="added-manually"]')
 
     assert len(buttons) == 0
@@ -72,9 +73,11 @@ def test_add_elements(driver):
 @pytest.mark.no_implicit_wait
 def test_remove_elements(driver):
 
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//a[text()="Add/Remove Elements"]'))).click()
+    # explicit wait because this test skips the implicit wait: the home page may still be loading
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(('xpath', '//a[text()="Add/Remove Elements"]'))).click()
 
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//button[text()="Add Element"]'))).click()
+    # wait for the Add/Remove Elements page to load
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(('xpath', '//button[text()="Add Element"]'))).click()
 
     buttons = driver.find_elements('xpath', '//button[@class="added-manually"]')
 
