@@ -41,7 +41,7 @@ def test_remove_elements(driver):
 
     assert page.delete_buttons.count() == 5
 
-    for remaining in range(4, -1, -1):
+    for remaining in reversed(range(5)):
         page.delete_buttons.random().click()
 
         assert page.delete_buttons.count() == remaining
