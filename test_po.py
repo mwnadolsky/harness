@@ -9,8 +9,6 @@ pytestmark = pytest.mark.regression_po
 
 def test_broken_images(driver):
 
-    driver.get("https://the-internet.herokuapp.com")
-
     page = HomePage
 
     page.broken_images_link.click()
@@ -25,8 +23,6 @@ def test_broken_images(driver):
 
 @pytest.mark.smoke
 def test_checkboxes(driver):
-
-    driver.get("https://the-internet.herokuapp.com")
 
     page = HomePage
 
@@ -47,8 +43,6 @@ def test_checkboxes(driver):
 
 @pytest.mark.smoke
 def test_dropdown(driver):
-
-    driver.get("https://the-internet.herokuapp.com/")
 
     page = HomePage
 
