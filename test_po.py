@@ -17,15 +17,15 @@ def test_add_elements(driver):
     page = AddRemoveElementsPage
 
     assert page.header_text.text == "Add/Remove Elements"
-    assert page.delete_button.count() == 0
+    assert page.delete_buttons.count() == 0
 
     page.add_element_button.click()
 
-    assert page.delete_button.count() == 1
+    assert page.delete_buttons.count() == 1
 
     page.add_element_button.click()
 
-    assert page.delete_button.count() == 2
+    assert page.delete_buttons.count() == 2
 
 
 def test_remove_elements(driver):
@@ -38,11 +38,11 @@ def test_remove_elements(driver):
 
     page.add_element_button.click()
 
-    assert page.delete_button.count() == 1
+    assert page.delete_buttons.count() == 1
 
-    page.delete_button.click()
+    page.delete_buttons.nth(0).click()
 
-    assert page.delete_button.count() == 0
+    assert page.delete_buttons.count() == 0
 
 
 def test_broken_images(driver):
