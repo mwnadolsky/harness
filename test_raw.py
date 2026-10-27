@@ -8,6 +8,14 @@ from selenium.webdriver.support.wait import WebDriverWait
 pytestmark = pytest.mark.regression_raw
 
 
+@pytest.fixture(autouse=True)
+def implicit_wait(request, driver):
+    """Give every test in this file a 10-second implicit wait, unless it's marked no_implicit_wait."""
+    # raw tests only: page object tests use explicit waits, and mixing the two makes wait times unpredictable
+    if request.node.get_closest_marker("no_implicit_wait") is None:
+        driver.implicitly_wait(10)
+
+
 @pytest.mark.smoke
 def test_title(driver):
 
@@ -39,15 +47,18 @@ def test_ab_testing_elemental_selenium_link(driver):
     assert "Elemental Selenium" in driver.title
 
 
+@pytest.mark.no_implicit_wait
 def test_add_elements(driver):
 
-    driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
+    # explicit wait because this test skips the implicit wait: the home page may still be loading
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(('xpath', '//a[text()="Add/Remove Elements"]'))).click()
 
+    # wait for the Add/Remove Elements page to load; finding its button first also proves the zero count below is real
+    add_element_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(('xpath', '//button[text()="Add Element"]')))
     buttons = driver.find_elements('xpath', '//button[@class="added-manually"]')
 
     assert len(buttons) == 0
 
-    add_element_button = driver.find_element('xpath', '//button[text()="Add Element"]')
     add_element_button.click()
     buttons = driver.find_elements('xpath', '//button[@class="added-manually"]')
 
@@ -59,11 +70,14 @@ def test_add_elements(driver):
     assert len(buttons) == 2
 
 
+@pytest.mark.no_implicit_wait
 def test_remove_elements(driver):
 
-    driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
+    # explicit wait because this test skips the implicit wait: the home page may still be loading
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(('xpath', '//a[text()="Add/Remove Elements"]'))).click()
 
-    driver.find_element('xpath', '//button[text()="Add Element"]').click()
+    # wait for the Add/Remove Elements page to load
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(('xpath', '//button[text()="Add Element"]'))).click()
 
     buttons = driver.find_elements('xpath', '//button[@class="added-manually"]')
 
@@ -376,7 +390,7 @@ def test_form_auth_errors(driver):
 
     # Both Blank
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+    error_bar = driver.find_element(by.ID, 'flash')
 
     assert 'username' in error_bar.text
 
@@ -385,7 +399,7 @@ def test_form_auth_errors(driver):
     # Correct username, Blank password
     driver.find_element(by.ID, 'username').send_keys('tomsmith')
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+    error_bar = driver.find_element(by.ID, 'flash')
 
     assert 'password' in error_bar.text
 
@@ -394,7 +408,7 @@ def test_form_auth_errors(driver):
     # Blank username, Correct password
     driver.find_element(by.ID, 'password').send_keys('SuperSecretPassword!')
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+    error_bar = driver.find_element(by.ID, 'flash')
     
     assert 'username' in error_bar.text
 
