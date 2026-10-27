@@ -36,13 +36,15 @@ def test_remove_elements(driver):
 
     page = AddRemoveElementsPage
 
-    page.add_element_button.click()
+    for _ in range(5):
+        page.add_element_button.click()
 
-    assert page.delete_buttons.count() == 1
+    assert page.delete_buttons.count() == 5
 
-    page.delete_buttons.nth(0).click()
+    for remaining in range(4, -1, -1):
+        page.delete_buttons.random().click()
 
-    assert page.delete_buttons.count() == 0
+        assert page.delete_buttons.count() == remaining
 
 
 def test_broken_images(driver):
