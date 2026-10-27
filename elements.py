@@ -21,6 +21,12 @@ class BaseElement:
     A locator may match several elements. Without an index, the element is
     the first match in page order; the others are ignored, with no error or
     warning. Use count(), nth(), and all() to work with every match.
+
+    In page objects, an element's name ends with its type. A singular name
+    (foo_button) means the locator matches exactly one element. A plural name
+    (foo_buttons) means it may match one or more; use such an element only
+    through count(), nth(), and all(), e.g. foo_buttons.nth(0).click() rather
+    than foo_buttons.click().
     """
 
     def __init__(self, locator, index=None):
