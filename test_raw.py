@@ -9,10 +9,11 @@ pytestmark = pytest.mark.regression_raw
 
 
 @pytest.fixture(autouse=True)
-def implicit_wait(driver):
-    """Give every test in this file a 10-second implicit wait for finding elements."""
+def implicit_wait(request, driver):
+    """Give every test in this file a 10-second implicit wait, unless it's marked no_implicit_wait."""
     # raw tests only: page object tests use explicit waits, and mixing the two makes wait times unpredictable
-    driver.implicitly_wait(10)
+    if request.node.get_closest_marker("no_implicit_wait") is None:
+        driver.implicitly_wait(10)
 
 
 @pytest.mark.smoke
@@ -46,15 +47,17 @@ def test_ab_testing_elemental_selenium_link(driver):
     assert "Elemental Selenium" in driver.title
 
 
+@pytest.mark.no_implicit_wait
 def test_add_elements(driver):
 
-    driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//a[text()="Add/Remove Elements"]'))).click()
 
+    # finding the Add Element button first proves the page loaded, so the zero count below is real
+    add_element_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//button[text()="Add Element"]')))
     buttons = driver.find_elements('xpath', '//button[@class="added-manually"]')
 
     assert len(buttons) == 0
 
-    add_element_button = driver.find_element('xpath', '//button[text()="Add Element"]')
     add_element_button.click()
     buttons = driver.find_elements('xpath', '//button[@class="added-manually"]')
 
@@ -66,11 +69,12 @@ def test_add_elements(driver):
     assert len(buttons) == 2
 
 
+@pytest.mark.no_implicit_wait
 def test_remove_elements(driver):
 
-    driver.find_element('xpath', '//a[text()="Add/Remove Elements"]').click()
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//a[text()="Add/Remove Elements"]'))).click()
 
-    driver.find_element('xpath', '//button[text()="Add Element"]').click()
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//button[text()="Add Element"]'))).click()
 
     buttons = driver.find_elements('xpath', '//button[@class="added-manually"]')
 
