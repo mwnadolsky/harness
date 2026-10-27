@@ -1,10 +1,48 @@
 import pytest
+from pages.the_internet.add_remove_elements import AddRemoveElementsPage
 from pages.the_internet.broken_images import BrokenImagesPage
 from pages.the_internet.checkboxes import CheckboxesPage
 from pages.the_internet.dropdown import DropdownPage
 from pages.the_internet.home import HomePage
 
 pytestmark = pytest.mark.regression_po
+
+
+def test_add_elements(driver):
+
+    page = HomePage
+
+    page.add_remove_elements_link.click()
+
+    page = AddRemoveElementsPage
+
+    assert page.header_text.text == "Add/Remove Elements"
+    assert page.delete_button.count() == 0
+
+    page.add_element_button.click()
+
+    assert page.delete_button.count() == 1
+
+    page.add_element_button.click()
+
+    assert page.delete_button.count() == 2
+
+
+def test_remove_elements(driver):
+
+    page = HomePage
+
+    page.add_remove_elements_link.click()
+
+    page = AddRemoveElementsPage
+
+    page.add_element_button.click()
+
+    assert page.delete_button.count() == 1
+
+    page.delete_button.click()
+
+    assert page.delete_button.count() == 0
 
 
 def test_broken_images(driver):

@@ -2,6 +2,7 @@
 
 Each element is created with a locator, e.g. Checkbox(('xpath', '//input')),
 and finds itself in the current browser (driver_manager.driver) each time it's used.
+An element whose locator matches several elements also stands for the whole group.
 """
 
 from selenium.webdriver.support.ui import Select, WebDriverWait as wait
@@ -16,11 +17,19 @@ class BaseElement:
     Any attribute an element class doesn't define is passed through to the
     underlying Selenium WebElement, so click(), is_selected(), text, and the
     rest of WebElement work directly on elements.
+
+    When the locator matches several elements, count(), nth(), and all() work
+    with the group; on its own, an element is the first match.
     """
 
-    def __init__(self, locator):
-        """Store the locator, a (strategy, value) pair such as ('xpath', '//h3')."""
+    def __init__(self, locator, index=None):
+        """Store the locator and which match to use.
+
+        The locator is a (strategy, value) pair such as ('xpath', '//h3'). The
+        index picks the Nth match (counting from 0); None means the first.
+        """
         self.locator = locator
+        self.index = index
 
     def __getattr__(self, name):
         """Pass any attribute this class doesn't define to the Selenium WebElement."""
@@ -32,8 +41,32 @@ class BaseElement:
 
     def element(self):
         """Wait for the element to exist, then return it as a Selenium WebElement."""
-        return wait(driver_manager.driver, 10).until(
-            EC.presence_of_element_located(self.locator))
+        if self.index is None:
+            return wait(driver_manager.driver, 10).until(
+                EC.presence_of_element_located(self.locator))
+        else:
+            return wait(driver_manager.driver, 10).until(lambda driver: self._nth_match(driver))
+
+    def _nth_match(self, driver):
+        """Return the match at self.index, or False if there aren't that many yet."""
+        matches = driver.find_elements(*self.locator)
+        if len(matches) > self.index:
+            return matches[self.index]
+        else:
+            return False
+
+    def count(self):
+        """Return how many elements the locator currently matches, without waiting."""
+        return len(driver_manager.driver.find_elements(*self.locator))
+
+    def nth(self, index):
+        """Return an element of the same type for the match at index (counting from 0)."""
+        # the new element is found when it's used, so it's "the Nth match at that moment"
+        return type(self)(self.locator, index)
+
+    def all(self):
+        """Return one element per current match, in page order."""
+        return [self.nth(i) for i in range(self.count())]
 
 
 class Button(BaseElement):
