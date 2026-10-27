@@ -8,6 +8,13 @@ from selenium.webdriver.support.wait import WebDriverWait
 pytestmark = pytest.mark.regression_raw
 
 
+@pytest.fixture(autouse=True)
+def implicit_wait(driver):
+    """Give every test in this file a 10-second implicit wait for finding elements."""
+    # raw tests only: page object tests use explicit waits, and mixing the two makes wait times unpredictable
+    driver.implicitly_wait(10)
+
+
 @pytest.mark.smoke
 def test_title(driver):
 
@@ -376,7 +383,7 @@ def test_form_auth_errors(driver):
 
     # Both Blank
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+    error_bar = driver.find_element(by.ID, 'flash')
 
     assert 'username' in error_bar.text
 
@@ -385,7 +392,7 @@ def test_form_auth_errors(driver):
     # Correct username, Blank password
     driver.find_element(by.ID, 'username').send_keys('tomsmith')
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+    error_bar = driver.find_element(by.ID, 'flash')
 
     assert 'password' in error_bar.text
 
@@ -394,7 +401,7 @@ def test_form_auth_errors(driver):
     # Blank username, Correct password
     driver.find_element(by.ID, 'password').send_keys('SuperSecretPassword!')
     driver.find_element('xpath','//button[@type ="submit"]').click()
-    error_bar = WebDriverWait(driver, 1).until(EC.presence_of_element_located((by.ID, 'flash')))
+    error_bar = driver.find_element(by.ID, 'flash')
     
     assert 'username' in error_bar.text
 
