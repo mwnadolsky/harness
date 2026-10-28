@@ -32,6 +32,14 @@ python -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
+**Activate the virtual environment in every new terminal session,** before running tests:
+
+```sh
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+```
+
+The `pytest` commands in this guide assume it's active. Without it, your shell either can't find `pytest` or runs a different installation that's missing the harness's dependencies. Run `deactivate` to leave it.
+
 ## Running tests
 
 **All tests at once:**
@@ -53,7 +61,14 @@ pytest test_po.py::test_checkboxes
 pytest test_po.py::test_checkboxes test_po.py::test_dropdown
 ```
 
-To run every test whose name contains some text, use `-k`: `pytest test_po.py -k ab_testing` runs the two page-object A/B tests. Without the file name, it also picks up the matching tests in `test_raw.py`.
+**By name (`-k`):** runs every test whose name contains the given text. The match ignores case, and it also checks file names:
+
+```sh
+pytest test_po.py -k ab_testing                  # the two page-object A/B tests
+pytest -k ab_testing                             # those, plus the matching tests in test_raw.py
+pytest -k "checkboxes and not raw"               # test_po.py::test_checkboxes only
+pytest -k "dropdown or checkboxes"
+```
 
 **By marker:**
 
