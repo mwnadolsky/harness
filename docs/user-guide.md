@@ -134,7 +134,7 @@ Page objects are built from **element objects**: one for each element, or group 
 
 **Every lookup waits.** Before using an element object, the harness waits up to 10 seconds for its element to exist on the page. See [Why element objects](#why-element-objects-no-more-waiting-by-hand).
 
-**Everything else comes from Selenium.** Anything an element object's class doesn't define is passed straight through to the underlying Selenium `WebElement`. So `page.submit_button.click()`, `page.header_text.text`, `page.checkbox_1_checkbox.is_selected()` and the rest of the `WebElement` API all work directly on element objects. `Dropdown` passes attributes to Selenium's `Select` helper first, so `select_by_value()`, `options` and the like work too.
+**Everything else comes from Selenium.** Anything an element class doesn't define is passed straight through to the underlying Selenium `WebElement`. So `page.submit_button.click()`, `page.header_text.text`, `page.checkbox_1_checkbox.is_selected()` and the rest of the `WebElement` API all work directly on element objects. `Dropdown` passes attributes to Selenium's `Select` helper first, so `select_by_value()`, `options` and the like work too.
 
 To add behavior that Selenium doesn't have, add a method to the right element object class (or to `BaseElement`, if every element object should have it). Don't add it to a page object.
 
