@@ -9,36 +9,59 @@ This harness runs Selenium tests with pytest against [the-internet](https://the-
 
 ## Contents
 
-1. [Running tests](#running-tests)
-2. [Project layout](#project-layout)
-3. [Writing a page-object test](#writing-a-page-object-test)
-4. [Page objects](#page-objects)
-5. [Element objects](#element-objects)
-6. [Groups of elements](#groups-of-elements)
-7. [Naming conventions](#naming-conventions)
-8. [Why element objects: no more waiting by hand](#why-element-objects-no-more-waiting-by-hand)
-9. [What raw Selenium is allowed in page-object tests](#what-raw-selenium-is-allowed-in-page-object-tests)
-10. [Raw tests and the implicit wait](#raw-tests-and-the-implicit-wait)
-11. [Code style](#code-style)
-12. [Decision records](#decision-records)
+1. [Setup](#setup)
+2. [Running tests](#running-tests)
+3. [Project layout](#project-layout)
+4. [Writing a page-object test](#writing-a-page-object-test)
+5. [Page objects](#page-objects)
+6. [Element objects](#element-objects)
+7. [Groups of elements](#groups-of-elements)
+8. [Naming conventions](#naming-conventions)
+9. [Why element objects](#why-element-objects)
+10. [What raw Selenium is allowed in page-object tests](#what-raw-selenium-is-allowed-in-page-object-tests)
+11. [Raw tests and the implicit wait](#raw-tests-and-the-implicit-wait)
+12. [Code style](#code-style)
+13. [Decision records](#decision-records)
 
-## Running tests
+## Setup
 
-Set up once:
+Do this once, from the repository root:
 
 ```sh
 python -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
-Run tests by **marker**:
+## Running tests
+
+**All tests at once:**
+
+```sh
+pytest
+```
+
+**One test file:**
+
+```sh
+pytest test_po.py
+```
+
+**Individual tests:** add the test's name after the file, separated by `::`. List several to run several:
+
+```sh
+pytest test_po.py::test_checkboxes
+pytest test_po.py::test_checkboxes test_po.py::test_dropdown
+```
+
+To run every test whose name contains some text, use `-k`: `pytest test_po.py -k ab_testing` runs the two page-object A/B tests. Without the file name, it also picks up the matching tests in `test_raw.py`.
+
+**By marker:**
 
 | Command | Runs |
 |---|---|
 | `pytest -m smoke` | a few fast tests |
 | `pytest -m regression_po` | every test in `test_po.py` |
 | `pytest -m regression_raw` | every test in `test_raw.py` |
-| `pytest` | everything |
 
 Markers are registered in `pytest.ini`, and pytest runs with `--strict-markers`, so a misspelled or unregistered marker is an error, not a silent no-op. To add a marker, register it in `pytest.ini` first.
 
@@ -95,13 +118,13 @@ def test_checkboxes(driver):
 
 **Take `driver` as a parameter** even if the test never uses it directly. Requesting the fixture is what starts the browser.
 
-**Layout:** group the lines into blocks separated by blank lines: actions, then the assertions about them. Don't narrate with comments. A comment is for something a reader wouldn't otherwise understand, like why a test repeats something 20 times.
+**Layout:** group the lines into blocks separated by blank lines: actions, then the assertions about them. Don't narrate test steps with comments. A comment is for something a reader wouldn't otherwise understand, like why a test repeats something 20 times.
 
 **No docstrings on tests.** What a test checks belongs in the manual test documentation, not in the code.
 
 ## Page objects
 
-A page object is a class that **declares the elements on one page**, and nothing else:
+A page object is a class that **declares the elements on one page**, plus, occasionally, a utility method for a multi-step workflow like `login()`:
 
 ```python
 class DropdownPage(BasePage):
@@ -111,36 +134,45 @@ class DropdownPage(BasePage):
     option_dropdown = Dropdown(('xpath', '//select[@id="dropdown"]'))
 ```
 
-- **Locators only.** Page objects hold no methods like `select_option()` or `go_to_checkboxes()`. Per-page helper functions pile up and become hard to maintain. Behavior lives in the [element object classes](#element-objects), where it's written once and shared by every page.
-- **Element objects are class attributes; tests use instances.** Declare element objects at class level, as above, and create an instance in tests: `page = DropdownPage()`. Every instance shares the same element objects, so creating one is effectively free.
+- **Mostly locators.** Don't add per-page methods that just wrap a single element action, like `select_option()` or `go_to_checkboxes()`. They pile up and become hard to maintain, and that behavior belongs in the [element object classes](#element-objects), where it's written once and shared by every page. A utility for a real multi-step workflow, like `login()`, is the exception.
+- **Element objects are class attributes; tests use instances.** Declare element objects at class level, as above, and create an instance in tests: `page = DropdownPage()`. Every instance shares the same element objects, so creating one is effectively free. Element object names follow a convention; see [Naming conventions](#naming-conventions).
 - **The locator is written inline,** as a `(strategy, value)` pair, usually XPath.
 - **Every page object subclasses `BasePage`,** which declares the elements every page shares (the flash message, the "Fork me on GitHub" link, the footer link).
-- **One page object per page,** in `pages/<site>/`. Each site gets its own package, so `pages/the_internet/` holds the-internet's pages.
+- **One page object per page,** in `pages/<site>/`. Each site gets its own package, so `pages/the_internet/` holds the-internet's pages. For example, the Checkboxes page (`/checkboxes`) is `CheckboxesPage` in `checkboxes.py`, and the Dropdown page (`/dropdown`) is `DropdownPage` in `dropdown.py`. File and class names come from the page's URL; see [Naming conventions](#naming-conventions).
 
 ## Element objects
 
-Page objects are built from **element objects**: one for each element, or group of elements, a test uses on the page. Element object classes live in `elements.py`:
+The default behavior of an element object is to stand for a single, uniquely located element. Page objects are built from them: one for each element, or [group of elements](#groups-of-elements), that a test uses on the page. Each one's name ends with its type, following the [naming conventions](#naming-conventions).
 
-| Class | For | Extras beyond Selenium |
-|---|---|---|
-| `Button` | buttons | none |
-| `Checkbox` | checkboxes | `toggle()`, `check()`, `uncheck()` |
-| `Dropdown` | `<select>` dropdowns | `option(text)`, `select(text_or_index)`, plus everything on Selenium's `Select` |
-| `Image` | images | `is_broken()` |
-| `Link` | links | none |
-| `Text` | text you read, like headings | none |
+Element object classes live in `elements.py`:
+
+| Class | For |
+|---|---|
+| `Button` | buttons |
+| `Checkbox` | checkboxes |
+| `Dropdown` | `<select>` dropdowns |
+| `Image` | images |
+| `Link` | links |
+| `Text` | text you read, like headings |
 
 **An element object is a recipe, not a found element.** It stores a locator and **finds its element again every time you use it.** That means it can't go stale, and it doesn't matter whether the page has reloaded since the page object was defined.
 
-**Every lookup waits.** Before using an element object, the harness waits up to 10 seconds for its element to exist on the page. See [Why element objects](#why-element-objects-no-more-waiting-by-hand).
+**Every lookup waits.** Before using an element object, the harness waits up to 10 seconds for its element to exist on the page. See [Why element objects](#why-element-objects).
 
-**Everything else comes from Selenium.** Anything an element class doesn't define is passed straight through to the underlying Selenium `WebElement`. So `page.submit_button.click()`, `page.header_text.text`, `page.checkbox_1_checkbox.is_selected()` and the rest of the `WebElement` API all work directly on element objects. `Dropdown` passes attributes to Selenium's `Select` helper first, so `select_by_value()`, `options` and the like work too.
+**Everything else comes from Selenium.** You can use an element object as if it were a Selenium `WebElement`. Take `Image`: it defines only one method of its own, `is_broken()`. If you call a `WebElement` method on an `Image` anyway, it runs on the image's actual `WebElement`, the one the element object finds with `element()`:
+
+```python
+page.image_3_image.is_broken()            # Image's own method
+page.image_3_image.get_attribute("src")   # a WebElement method, run on the WebElement element() finds
+```
+
+The same holds for every element object class, so `click()`, `text`, `is_selected()` and the rest of the `WebElement` API work on all of them. `Dropdown` also gives you Selenium's `Select` helper, so `select_by_value()`, `options` and the like work on dropdowns too.
 
 To add behavior that Selenium doesn't have, add a method to the right element object class (or to `BaseElement`, if every element object should have it). Don't add it to a page object.
 
 ## Groups of elements
 
-One element object can stand for **every** match of its locator. Some pages have a varying number of the same thing, like the Delete buttons on Add/Remove Elements. Declare the group once:
+In addition to the default behavior, an element object can stand for **every** match of its locator. Some pages have a varying number of the same thing, like the Delete buttons on Add/Remove Elements. Declare the group once:
 
 ```python
 delete_buttons = Button(('xpath', '//div[@id="elements"]/button[text()="Delete"]'))
@@ -184,11 +216,17 @@ So write `page.delete_buttons.nth(0).click()`, never `page.delete_buttons.click(
 
 **Page objects are named after the URL path:** the page at `/bar/baz` lives in `bar_baz.py` as `BarBazPage`. For example, `/abtest` is `abtest.py` and `AbtestPage`, and `/add_remove_elements/` is `add_remove_elements.py` and `AddRemoveElementsPage`.
 
-**`LoginPage` is reserved** for a future login fixture. (Open question: what to call the page object for a site's own `/login` page.)
+**Two names are reserved,** whatever the page's URL:
+- **`HomePage`** is the page at the site's root (`/`).
+- **`LoginPage`** is whichever page handles logins.
 
-## Why element objects: no more waiting by hand
+## Why element objects
 
-The biggest practical benefit of element objects is that **they prevent slow-page-load failures, and they remove most of the finicky explicit waiting** that plain Selenium tests need.
+Element objects have two big benefits.
+
+**Each layer reads on its own terms.** When you write or read a test, you see only test steps: `page.checkboxes_link.click()`, `assert page.checkbox_1_checkbox.is_selected()`. When you write a page object, you see only XPath and element declarations. How elements behave lives in the element object classes. XPath, waits and test logic never pile up on the same line.
+
+**No more waiting by hand.** Element objects prevent slow-page-load failures, and they remove most of the finicky explicit waiting that plain Selenium tests need.
 
 In plain Selenium, `driver.find_element(...)` looks once. If the page is still loading, it fails right away. The usual fix is an explicit wait at that spot:
 
@@ -208,7 +246,7 @@ Element objects build that wait into every lookup, so tests just say `page.add_r
 
 The goal is **no raw Selenium for element work** in `test_po.py`: no `driver.find_element`, no raw `WebElement`s, no hand-written waits for elements. Use page objects and element objects.
 
-**Driver actions are fine as raw Selenium:** `driver.refresh()`, `driver.get(...)`, `driver.back()`, `driver.delete_all_cookies()`, `driver.title`, `driver.current_url` and the like. They act on the browser as a whole and have nothing to wait for. Wrapping them would just add a pass-through layer that never fixes anything. The A/B tests use them like this:
+**Driver actions are fine as raw Selenium:** `driver.refresh()`, `driver.get(...)`, `driver.back()`, `driver.delete_all_cookies()`, `driver.title`, `driver.current_url` and the like. They act on the browser as a whole and have nothing to wait for. Wrapping them would just add a pass-through layer that never fixes anything and does little for readability. The A/B tests use them like this:
 
 ```python
 for _ in range(20):
