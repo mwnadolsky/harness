@@ -7,7 +7,7 @@ class DriverManager:
     """Hold the current WebDriver and control when it starts and quits.
 
     The driver fixture calls start() before each test and quit() after it.
-    Other code, such as page elements, reads the current browser from .driver.
+    Other code, such as element objects, reads the current browser from .driver.
     """
 
     def __init__(self):
