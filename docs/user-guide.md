@@ -4,7 +4,7 @@
 
 This harness runs Selenium tests with pytest against [the-internet](https://the-internet.herokuapp.com/), a practice site full of awkward web pages. It has two kinds of tests:
 
-- **`test_po.py`:** page-object tests. Tests talk to *page objects* and *elements*, never to Selenium elements directly. This is the style new tests should use.
+- **`test_po.py`:** page-object tests. Tests talk to *page objects* and *element objects*, never to Selenium elements directly. This is the style new tests should use.
 - **`test_raw.py`:** the same kinds of checks written with plain Selenium. It's the original suite, and tests are gradually being ported from it to `test_po.py`.
 
 ## Contents
@@ -13,10 +13,10 @@ This harness runs Selenium tests with pytest against [the-internet](https://the-
 2. [Project layout](#project-layout)
 3. [Writing a page-object test](#writing-a-page-object-test)
 4. [Page objects](#page-objects)
-5. [Elements](#elements)
+5. [Element objects](#element-objects)
 6. [Groups of elements](#groups-of-elements)
 7. [Naming conventions](#naming-conventions)
-8. [Why elements: no more waiting by hand](#why-elements-no-more-waiting-by-hand)
+8. [Why element objects: no more waiting by hand](#why-element-objects-no-more-waiting-by-hand)
 9. [What raw Selenium is allowed in page-object tests](#what-raw-selenium-is-allowed-in-page-object-tests)
 10. [Raw tests and the implicit wait](#raw-tests-and-the-implicit-wait)
 11. [Code style](#code-style)
@@ -57,7 +57,7 @@ Add `-v` to see each test's name and result.
 ```
 conftest.py          the driver fixture and the -H/--headed option
 driver_manager.py    starts and quits Chrome; holds the current driver
-elements.py          element classes (Button, Checkbox, Dropdown, ...)
+elements.py          element object classes (Button, Checkbox, Dropdown, ...)
 pages/
   the_internet/      one page object per page of the-internet
     base.py          BasePage: elements shared by every page
@@ -111,15 +111,15 @@ class DropdownPage(BasePage):
     option_dropdown = Dropdown(('xpath', '//select[@id="dropdown"]'))
 ```
 
-- **Locators only.** Page objects hold no methods like `select_option()` or `go_to_checkboxes()`. Per-page helper functions pile up and become hard to maintain. Behavior lives in the [element classes](#elements), where it's written once and shared by every page.
-- **Elements are class attributes; tests use instances.** Declare elements at class level, as above, and create an instance in tests: `page = DropdownPage()`. Every instance shares the same element objects, so creating one is effectively free.
+- **Locators only.** Page objects hold no methods like `select_option()` or `go_to_checkboxes()`. Per-page helper functions pile up and become hard to maintain. Behavior lives in the [element object classes](#element-objects), where it's written once and shared by every page.
+- **Element objects are class attributes; tests use instances.** Declare element objects at class level, as above, and create an instance in tests: `page = DropdownPage()`. Every instance shares the same element objects, so creating one is effectively free.
 - **The locator is written inline,** as a `(strategy, value)` pair, usually XPath.
 - **Every page object subclasses `BasePage`,** which declares the elements every page shares (the flash message, the "Fork me on GitHub" link, the footer link).
 - **One page object per page,** in `pages/<site>/`. Each site gets its own package, so `pages/the_internet/` holds the-internet's pages.
 
-## Elements
+## Element objects
 
-Element classes live in `elements.py`:
+Page objects are built from **element objects**: one for each element, or group of elements, a test uses on the page. Element object classes live in `elements.py`:
 
 | Class | For | Extras beyond Selenium |
 |---|---|---|
@@ -130,30 +130,30 @@ Element classes live in `elements.py`:
 | `Link` | links | none |
 | `Text` | text you read, like headings | none |
 
-**An element is a recipe, not a found element.** It stores a locator and **finds itself again every time you use it.** That means it can't go stale, and it doesn't matter whether the page has reloaded since the page object was defined.
+**An element object is a recipe, not a found element.** It stores a locator and **finds its element again every time you use it.** That means it can't go stale, and it doesn't matter whether the page has reloaded since the page object was defined.
 
-**Every lookup waits.** Before using an element, the harness waits up to 10 seconds for it to exist on the page. See [Why elements](#why-elements-no-more-waiting-by-hand).
+**Every lookup waits.** Before using an element object, the harness waits up to 10 seconds for its element to exist on the page. See [Why element objects](#why-element-objects-no-more-waiting-by-hand).
 
-**Everything else comes from Selenium.** Anything an element class doesn't define is passed straight through to the underlying Selenium `WebElement`. So `page.submit_button.click()`, `page.header_text.text`, `page.checkbox_1_checkbox.is_selected()` and the rest of the `WebElement` API all work directly on elements. `Dropdown` passes attributes to Selenium's `Select` helper first, so `select_by_value()`, `options` and the like work too.
+**Everything else comes from Selenium.** Anything an element object's class doesn't define is passed straight through to the underlying Selenium `WebElement`. So `page.submit_button.click()`, `page.header_text.text`, `page.checkbox_1_checkbox.is_selected()` and the rest of the `WebElement` API all work directly on element objects. `Dropdown` passes attributes to Selenium's `Select` helper first, so `select_by_value()`, `options` and the like work too.
 
-To add behavior that Selenium doesn't have, add a method to the right element class (or to `BaseElement`, if every element should have it). Don't add it to a page object.
+To add behavior that Selenium doesn't have, add a method to the right element object class (or to `BaseElement`, if every element object should have it). Don't add it to a page object.
 
 ## Groups of elements
 
-One element can stand for **every** match of its locator. Some pages have a varying number of the same thing, like the Delete buttons on Add/Remove Elements. Declare the group once:
+One element object can stand for **every** match of its locator. Some pages have a varying number of the same thing, like the Delete buttons on Add/Remove Elements. Declare the group once:
 
 ```python
 delete_buttons = Button(('xpath', '//div[@id="elements"]/button[text()="Delete"]'))
 ```
 
-and use it through the group methods, available on every element:
+and use it through the group methods, available on every element object:
 
 | Method | Returns |
 |---|---|
 | `count()` | how many elements match right now. Doesn't wait, since 0 is a valid answer. |
-| `nth(i)` | an element of the same type for the i-th match, counting from 0 |
-| `all()` | one element per current match, in page order |
-| `random()` | an element for a randomly chosen match. Waits for at least one match first. |
+| `nth(i)` | an element object of the same type for the i-th match, counting from 0 |
+| `all()` | one element object per current match, in page order |
+| `random()` | an element object for a randomly chosen match. Waits for at least one match first. |
 
 ```python
 assert page.delete_buttons.count() == 5
@@ -162,16 +162,16 @@ page.delete_buttons.nth(0).click()
 page.delete_buttons.random().click()
 ```
 
-**How it works:** `nth(2)` doesn't search the page. It returns a new element that remembers "the third match of this locator", and that element is looked up when you use it. So it means **the third match at that moment**. If an earlier match disappears, positions shift: after you delete the first button, `nth(2)` refers to the button that used to be fourth.
+**How it works:** `nth(2)` doesn't search the page. It returns a new element object that remembers "the third match of this locator", and that element object looks up its match when you use it. So it means **the third match at that moment**. If an earlier match disappears, positions shift: after you delete the first button, `nth(2)` refers to the button that used to be fourth.
 
 Some behaviors to know:
-- **An index past the end waits, then fails.** `nth(5)` with only 2 matches waits 10 seconds for a sixth match to appear, then raises a `TimeoutException`. A single element that never appears fails the same way.
+- **An index past the end waits, then fails.** `nth(5)` with only 2 matches waits 10 seconds for a sixth match to appear, then raises a `TimeoutException`. A single element object whose element never appears fails the same way.
 - **A negative index on an empty group fails immediately** with an `IndexError`.
-- **An element used without an index is the first match.** If a locator matches several elements and you use the element directly (`page.foo_buttons.click()`), you get the first match in page order. There's no error or warning about the others. That's why the naming rule below matters.
+- **An element object used without an index is the first match.** If a locator matches several elements and you use the element object directly (`page.foo_buttons.click()`), you get the first match in page order. There's no error or warning about the others. That's why the naming rule below matters.
 
 ## Naming conventions
 
-**An element's name ends with its type:** `checkboxes_link`, `header_text`, `submit_button`, `option_dropdown`. The suffix tells you what you can do with it without opening the page object. It still applies when it reads oddly: the home page's link to Redirect Link is `redirect_link_link`.
+**An element object's name ends with its type:** `checkboxes_link`, `header_text`, `submit_button`, `option_dropdown`. The suffix tells you what you can do with it without opening the page object. It still applies when it reads oddly: the home page's link to Redirect Link is `redirect_link_link`.
 
 **Singular means exactly one; plural means a group:**
 
@@ -180,15 +180,15 @@ Some behaviors to know:
 | `foo_button` | the locator matches exactly one element | directly: `page.foo_button.click()` |
 | `foo_buttons` | the locator may match one or more | only through `count()`, `nth()`, `all()` and `random()` |
 
-So write `page.delete_buttons.nth(0).click()`, never `page.delete_buttons.click()`. The longer form says which button you mean. The short one would silently click the first, which reads like "click all the buttons". The plural rule is mechanical, even when the plural reads oddly: a group of `Text` elements is `foo_texts`.
+So write `page.delete_buttons.nth(0).click()`, never `page.delete_buttons.click()`. The longer form says which button you mean. The short one would silently click the first, which reads like "click all the buttons". The plural rule is mechanical, even when the plural reads oddly: a group of `Text` element objects is `foo_texts`.
 
 **Page objects are named after the URL path:** the page at `/bar/baz` lives in `bar_baz.py` as `BarBazPage`. For example, `/abtest` is `abtest.py` and `AbtestPage`, and `/add_remove_elements/` is `add_remove_elements.py` and `AddRemoveElementsPage`.
 
 **`LoginPage` is reserved** for a future login fixture. (Open question: what to call the page object for a site's own `/login` page.)
 
-## Why elements: no more waiting by hand
+## Why element objects: no more waiting by hand
 
-The biggest practical benefit of elements is that **they prevent slow-page-load failures, and they remove most of the finicky explicit waiting** that plain Selenium tests need.
+The biggest practical benefit of element objects is that **they prevent slow-page-load failures, and they remove most of the finicky explicit waiting** that plain Selenium tests need.
 
 In plain Selenium, `driver.find_element(...)` looks once. If the page is still loading, it fails right away. The usual fix is an explicit wait at that spot:
 
@@ -198,7 +198,7 @@ WebDriverWait(driver, 10).until(EC.presence_of_element_located(('xpath', '//a[te
 
 and then the same fix at the next spot, and the next. Each test has to get every wait right on its own. When one is missed, you debug it test by test, even though it's really one systemic problem.
 
-Elements build that wait into every lookup, so tests just say `page.add_remove_elements_link.click()`. The fix lives in one place, and it covers every test.
+Element objects build that wait into every lookup, so tests just say `page.add_remove_elements_link.click()`. The fix lives in one place, and it covers every test.
 
 **This has already happened in this project.** `test_raw.py` had three slow-load failures (`test_slider`, `test_form_auth_errors` and `test_broken_images`), each a raw `find_element` running before the page was ready. Fixing them needed an implicit wait for the whole file, with an opt-out for tests that it slowed down (see [below](#raw-tests-and-the-implicit-wait)). `test_po.py` hasn't had a slow-load failure.
 
@@ -206,7 +206,7 @@ Elements build that wait into every lookup, so tests just say `page.add_remove_e
 
 ## What raw Selenium is allowed in page-object tests
 
-The goal is **no raw Selenium for element work** in `test_po.py`: no `driver.find_element`, no raw `WebElement`s, no hand-written waits for elements. Use page objects and elements.
+The goal is **no raw Selenium for element work** in `test_po.py`: no `driver.find_element`, no raw `WebElement`s, no hand-written waits for elements. Use page objects and element objects.
 
 **Driver actions are fine as raw Selenium:** `driver.refresh()`, `driver.get(...)`, `driver.back()`, `driver.delete_all_cookies()`, `driver.title`, `driver.current_url` and the like. They act on the browser as a whole and have nothing to wait for. Wrapping them would just add a pass-through layer that never fixes anything. The A/B tests use them like this:
 
@@ -217,11 +217,11 @@ for _ in range(20):
     seen.add(page.header_text.text)
 ```
 
-**The exception: driver actions that wait on the browser.** These include switching to a newly opened window, handling an alert, and switching into a frame. They have the same kind of race as element lookups: the window, alert or frame may not exist yet. When one of these causes a failure, the plan is a driver abstraction that adds the needed waits to those actions and passes everything else straight through to Selenium, the same way elements do.
+**The exception: driver actions that wait on the browser.** These include switching to a newly opened window, handling an alert, and switching into a frame. They have the same kind of race as element lookups: the window, alert or frame may not exist yet. When one of these causes a failure, the plan is a driver abstraction that adds the needed waits to those actions and passes everything else straight through to Selenium, the same way element objects do.
 
 ## Raw tests and the implicit wait
 
-`test_raw.py` has an autouse fixture that gives every test in that file a **10-second implicit wait**: every `find_element` waits up to 10 seconds for its element. It applies only to `test_raw.py`. Page-object tests use their elements' explicit waits, and mixing the two kinds of wait makes wait times unpredictable.
+`test_raw.py` has an autouse fixture that gives every test in that file a **10-second implicit wait**: every `find_element` waits up to 10 seconds for its element. It applies only to `test_raw.py`. Page-object tests use their element objects' explicit waits, and mixing the two kinds of wait makes wait times unpredictable.
 
 **The catch:** with an implicit wait, `find_elements` only returns an empty list after waiting the full 10 seconds. So checking that something is *absent* gets slow. Tests that do that can opt out with the `no_implicit_wait` marker and use explicit waits instead:
 
