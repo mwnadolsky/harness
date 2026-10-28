@@ -77,11 +77,11 @@ docs/decisions/      decision records
 ```python
 def test_checkboxes(driver):
 
-    page = HomePage
+    page = HomePage()
 
     page.checkboxes_link.click()
 
-    page = CheckboxesPage
+    page = CheckboxesPage()
 
     assert page.header_text.text == "Checkboxes"
     assert not page.checkbox_1_checkbox.is_selected()
@@ -91,7 +91,7 @@ def test_checkboxes(driver):
     assert page.checkbox_1_checkbox.is_selected()
 ```
 
-**`page` is always the page currently on screen.** Tests start on the home page, so they start with `page = HomePage`. Whenever an action takes the browser to a different page, reassign `page` right after it. Reading the test top to bottom then tells you which page you're on at every line.
+**`page` is always the page currently on screen.** Tests start on the home page, so they start with `page = HomePage()`. Whenever an action takes the browser to a different page, reassign `page` right after it. Reading the test top to bottom then tells you which page you're on at every line.
 
 **Take `driver` as a parameter** even if the test never uses it directly. Requesting the fixture is what starts the browser.
 
@@ -112,7 +112,7 @@ class DropdownPage(BasePage):
 ```
 
 - **Locators only.** Page objects hold no methods like `select_option()` or `go_to_checkboxes()`. Per-page helper functions pile up and become hard to maintain. Behavior lives in the [element classes](#elements), where it's written once and shared by every page.
-- **Class attributes, not instances.** You use the class directly: `page = DropdownPage`, never `DropdownPage()`.
+- **Elements are class attributes; tests use instances.** Declare elements at class level, as above, and create an instance in tests: `page = DropdownPage()`. Every instance shares the same element objects, so creating one is effectively free.
 - **The locator is written inline,** as a `(strategy, value)` pair, usually XPath.
 - **Every page object subclasses `BasePage`,** which declares the elements every page shares (the flash message, the "Fork me on GitHub" link, the footer link).
 - **One page object per page,** in `pages/<site>/`. Each site gets its own package, so `pages/the_internet/` holds the-internet's pages.
