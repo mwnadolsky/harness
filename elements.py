@@ -16,7 +16,7 @@ from driver_manager import driver_manager
 class BaseElement:
     """Shared behavior for all element objects: finding their elements and delegating to Selenium.
 
-    Any attribute an element object's class doesn't define is passed through to
+    Any attribute an element class doesn't define is passed through to
     the underlying Selenium WebElement, so click(), is_selected(), text, and the
     rest of WebElement work directly on element objects.
 
