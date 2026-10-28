@@ -1,4 +1,5 @@
 import pytest
+from pages.the_internet.abtest import AbtestPage
 from pages.the_internet.add_remove_elements import AddRemoveElementsPage
 from pages.the_internet.broken_images import BrokenImagesPage
 from pages.the_internet.checkboxes import CheckboxesPage
@@ -6,6 +7,47 @@ from pages.the_internet.dropdown import DropdownPage
 from pages.the_internet.home import HomePage
 
 pytestmark = pytest.mark.regression_po
+
+
+def test_ab_testing_sticky(driver):
+
+    page = HomePage
+
+    page.ab_testing_link.click()
+
+    page = AbtestPage
+
+    variant = page.header_text.text
+
+    assert variant in ("A/B Test Control", "A/B Test Variation 1")
+
+    for _ in range(5):
+        driver.refresh()
+
+        assert page.header_text.text == variant
+
+
+def test_ab_testing_variants(driver):
+
+    page = HomePage
+
+    page.ab_testing_link.click()
+
+    page = AbtestPage
+
+    variants = {"A/B Test Control", "A/B Test Variation 1"}
+    seen = set()
+
+    # each try is a new visitor: clearing the cookies drops the assigned variant.
+    # 20 tries: with a 50/50 split, all 20 landing on one variant is a 1 in 524,288 chance
+    for _ in range(20):
+        driver.delete_all_cookies()
+        driver.refresh()
+        seen.add(page.header_text.text)
+        if seen == variants:
+            break
+
+    assert seen == variants
 
 
 def test_add_elements(driver):
