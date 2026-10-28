@@ -1,7 +1,5 @@
 # Harness User Guide
 
-> **Draft.** First pass at describing how the harness works and the conventions for writing tests in it. Expect heavy edits.
-
 This harness runs Selenium tests with pytest against [the-internet](https://the-internet.herokuapp.com/), a practice site full of awkward web pages. It has two kinds of tests:
 
 - **`test_po.py`:** page-object tests. Tests talk to *page objects* and *element objects*, never to Selenium elements directly. This is the style new tests should use.
