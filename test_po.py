@@ -11,11 +11,11 @@ pytestmark = pytest.mark.regression_po
 
 def test_ab_testing_sticky(driver):
 
-    page = HomePage
+    page = HomePage()
 
     page.ab_testing_link.click()
 
-    page = AbtestPage
+    page = AbtestPage()
 
     variant = page.header_text.text
 
@@ -29,11 +29,11 @@ def test_ab_testing_sticky(driver):
 
 def test_ab_testing_variants(driver):
 
-    page = HomePage
+    page = HomePage()
 
     page.ab_testing_link.click()
 
-    page = AbtestPage
+    page = AbtestPage()
 
     variants = {"A/B Test Control", "A/B Test Variation 1"}
     seen = set()
@@ -52,11 +52,11 @@ def test_ab_testing_variants(driver):
 
 def test_add_elements(driver):
 
-    page = HomePage
+    page = HomePage()
 
     page.add_remove_elements_link.click()
 
-    page = AddRemoveElementsPage
+    page = AddRemoveElementsPage()
 
     assert page.header_text.text == "Add/Remove Elements"
     assert page.delete_buttons.count() == 0
@@ -72,11 +72,11 @@ def test_add_elements(driver):
 
 def test_remove_elements(driver):
 
-    page = HomePage
+    page = HomePage()
 
     page.add_remove_elements_link.click()
 
-    page = AddRemoveElementsPage
+    page = AddRemoveElementsPage()
 
     for _ in range(5):
         page.add_element_button.click()
@@ -91,11 +91,11 @@ def test_remove_elements(driver):
 
 def test_broken_images(driver):
 
-    page = HomePage
+    page = HomePage()
 
     page.broken_images_link.click()
 
-    page = BrokenImagesPage
+    page = BrokenImagesPage()
 
     assert page.header_text.text == "Broken Images"
     assert page.image_1_image.is_broken()
@@ -106,11 +106,11 @@ def test_broken_images(driver):
 @pytest.mark.smoke
 def test_checkboxes(driver):
 
-    page = HomePage
+    page = HomePage()
 
     page.checkboxes_link.click()
 
-    page = CheckboxesPage
+    page = CheckboxesPage()
 
     assert page.header_text.text == "Checkboxes"
     assert not page.checkbox_1_checkbox.is_selected()
@@ -126,11 +126,11 @@ def test_checkboxes(driver):
 @pytest.mark.smoke
 def test_dropdown(driver):
 
-    page = HomePage
+    page = HomePage()
 
     page.dropdown_link.click()
 
-    page = DropdownPage
+    page = DropdownPage()
 
     page.option_dropdown.click()
     page.option_dropdown.option("Option 1").click()
