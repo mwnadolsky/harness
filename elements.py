@@ -1,8 +1,8 @@
-"""Element classes that page objects use to declare their elements.
+"""Element object classes, which page objects use to declare the elements on a page.
 
-Each element is created with a locator, e.g. Checkbox(('xpath', '//input')),
-and finds itself in the current browser (driver_manager.driver) each time it's used.
-An element may use a locator that matches an element uniquely, or a locator that matches a group of elements. Groups of elements should be of the same type (e.g. all Buttons, all Fields, etc.)
+Each element object is created with a locator, e.g. Checkbox(('xpath', '//input')),
+and finds its element in the current browser (driver_manager.driver) each time it's used.
+An element object may use a locator that matches an element uniquely, or a locator that matches a group of elements. Groups of elements should be of the same type (e.g. all Buttons, all Fields, etc.)
 """
 
 from random import randrange
@@ -14,19 +14,19 @@ from driver_manager import driver_manager
 
 
 class BaseElement:
-    """Shared behavior for all elements: finding them and delegating to Selenium.
+    """Shared behavior for all element objects: finding their elements and delegating to Selenium.
 
-    Any attribute an element class doesn't define is passed through to the
-    underlying Selenium WebElement, so click(), is_selected(), text, and the
-    rest of WebElement work directly on elements.
+    Any attribute an element class doesn't define is passed through to
+    the underlying Selenium WebElement, so click(), is_selected(), text, and the
+    rest of WebElement work directly on element objects.
 
-    A locator may match several elements. Without an index, the element is
-    the first match in page order; the others are ignored, with no error or
+    A locator may match several elements. Without an index, the element object
+    is the first match in page order; the others are ignored, with no error or
     warning. Use count(), nth(), all(), and random() to work with every match.
 
-    In page objects, an element's name ends with its type. A singular name
+    In page objects, an element object's name ends with its type. A singular name
     (foo_button) means the locator matches exactly one element. A plural name
-    (foo_buttons) means it may match one or more; use such an element only
+    (foo_buttons) means it may match one or more; use such an element object only
     through count(), nth(), all(), and random(), e.g. foo_buttons.nth(0).click()
     rather than foo_buttons.click().
     """
@@ -36,7 +36,7 @@ class BaseElement:
 
         The locator is a (strategy, value) pair such as ('xpath', '//h3'). The
         index picks the Nth match (counting from 0). With no index, the element
-        is the first match, even if the locator matches more than one.
+        object is the first match, even if the locator matches more than one.
         """
         self.locator = locator
         self.index = index
@@ -74,19 +74,19 @@ class BaseElement:
         return len(driver_manager.driver.find_elements(*self.locator))
 
     def nth(self, index):
-        """Return an element of the same type for the match at index (counting from 0)."""
-        # the new element is found when it's used, so it's "the Nth match at that moment"
+        """Return an element object of the same type for the match at index (counting from 0)."""
+        # the new element object finds its match when it's used, so it's "the Nth match at that moment"
         return type(self)(self.locator, index)
 
     def all(self):
-        """Return one element per current match, in page order."""
+        """Return one element object per current match, in page order."""
         return [self.nth(i) for i in range(self.count())]
 
     def random(self):
-        """Return an element of the same type for a randomly chosen match.
+        """Return an element object of the same type for a randomly chosen match.
 
         Waits for at least one match. The position is picked now, from the
-        current matches; like nth(), the element is found when it's used.
+        current matches; like nth(), the element object finds its match when it's used.
         """
         wait(driver_manager.driver, 10).until(lambda driver: self.count() > 0)
         return self.nth(randrange(self.count()))

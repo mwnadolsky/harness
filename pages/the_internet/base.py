@@ -1,4 +1,4 @@
-"""Elements shared by every standard page of the-internet."""
+"""Element objects shared by every standard page of the-internet."""
 
 from elements import Link, Text
 
